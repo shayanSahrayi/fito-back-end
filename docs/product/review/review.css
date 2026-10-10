@@ -1,0 +1,207 @@
+@font-face {
+  font-family: Vazirmatn;
+  src: url("fonts/Vazirmatn-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: Vazirmatn;
+  src: url("fonts/Vazirmatn-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: Vazirmatn;
+  src: url("fonts/Vazirmatn-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@page {
+  size: A4;
+  margin: 14mm 12mm 16mm;
+  @bottom-right {
+    content: counter(page);
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    font-size: 9pt;
+    color: #78716c;
+  }
+  @bottom-left {
+    content: "فیتو — بررسی طراحی بک‌اند، پیش از توسعه";
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    font-size: 8.5pt;
+    color: #a8a29e;
+  }
+}
+
+* { box-sizing: border-box; }
+html { direction: rtl; }
+body {
+  margin: 0;
+  color: #1c1917;
+  background: white;
+  font-family: Vazirmatn, Tahoma, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.75;
+}
+
+.cover {
+  height: 248mm;
+  page-break-inside: avoid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8mm 2mm 0;
+}
+.kicker {
+  color: #0f3d3e;
+  font-weight: 700;
+  letter-spacing: 0;
+  font-size: 11pt;
+}
+.cover h1 {
+  margin: 18mm 0 6mm;
+  font-size: 32pt;
+  line-height: 1.35;
+  font-weight: 700;
+  page-break-before: auto;
+}
+.lede {
+  font-size: 13pt;
+  line-height: 1.9;
+  max-width: 42em;
+  color: #292524;
+}
+.meta {
+  border-top: 2px solid #0f3d3e;
+  padding-top: 6mm;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4mm 8mm;
+}
+.meta div { font-size: 10pt; }
+.meta strong { display: block; color: #0f3d3e; }
+
+h1 {
+  font-size: 18pt;
+  line-height: 1.4;
+  margin: 0 0 4mm;
+  page-break-before: always;
+  color: #0f3d3e;
+}
+h2 {
+  font-size: 13.5pt;
+  margin: 7mm 0 2mm;
+  color: #1c1917;
+  page-break-after: avoid;
+}
+h3 {
+  font-size: 11.5pt;
+  margin: 5mm 0 1.5mm;
+  page-break-after: avoid;
+  color: #292524;
+}
+p { margin: 0 0 2.5mm; }
+ul, ol { margin: 0 0 3mm; padding-right: 5mm; }
+li { margin-bottom: 1mm; }
+strong { font-weight: 700; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2mm 0 5mm;
+  font-size: 8.4pt;
+  line-height: 1.45;
+  page-break-inside: auto;
+}
+th, td {
+  border: 0.4pt solid #d6d3d1;
+  padding: 1.4mm 1.6mm;
+  vertical-align: top;
+  text-align: right;
+}
+th {
+  background: #0f3d3e;
+  color: white;
+  font-weight: 500;
+}
+tr { page-break-inside: avoid; }
+tbody tr:nth-child(even) td { background: #fafaf9; }
+
+code {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.86em;
+  direction: ltr;
+  unicode-bidi: isolate;
+  background: #f5f5f4;
+  padding: 0 1.2mm;
+}
+pre.code, .diagram {
+  direction: ltr;
+  text-align: left;
+  background: #fafaf9;
+  border: 0.4pt solid #e7e5e4;
+  padding: 3mm;
+  margin: 2mm 0 5mm;
+  page-break-inside: avoid;
+  overflow: visible;
+}
+h2, h3 { break-after: avoid; }
+.diagram { break-before: avoid; }
+pre.code {
+  white-space: pre-wrap;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 8pt;
+  line-height: 1.45;
+}
+.diagram svg {
+  display: block;
+  width: 100% !important;
+  max-height: 185mm !important;
+  height: auto !important;
+  direction: ltr !important;
+}
+.diagram svg text, .diagram svg span, .diagram svg foreignObject {
+  direction: ltr !important;
+  unicode-bidi: isolate;
+}
+
+.callout {
+  border-right: 3px solid #0f3d3e;
+  background: #f3f7f7;
+  padding: 3mm 4mm;
+  margin: 3mm 0 5mm;
+  page-break-inside: avoid;
+}
+.callout.warn {
+  border-right-color: #9a3412;
+  background: #fff7ed;
+}
+.tag {
+  display: inline-block;
+  border-radius: 2px;
+  padding: 0 1.5mm;
+  font-size: 8pt;
+  font-weight: 700;
+  line-height: 1.6;
+}
+.need { background: #d1fae5; color: #065f46; }
+.proposal { background: #dbeafe; color: #1e3a8a; }
+.open { background: #ffedd5; color: #9a3412; }
+.missing { background: #fee2e2; color: #991b1b; }
+.future { background: #e7e5e4; color: #44403c; }
+
+.uc {
+  border: 0.4pt solid #e7e5e4;
+  padding: 3mm 3.5mm 1mm;
+  margin: 0 0 4mm;
+  page-break-inside: avoid;
+}
+.uc h3 { margin-top: 0; }
+.appendix h1 { margin-bottom: 6mm; }
+.ref {
+  font-weight: 500;
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+}

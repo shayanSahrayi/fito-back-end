@@ -1,0 +1,4168 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>بررسی طراحی بک‌اند فیتو</title>
+<style>
+@font-face {
+  font-family: Vazirmatn;
+  src: url("fonts/Vazirmatn-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: Vazirmatn;
+  src: url("fonts/Vazirmatn-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: Vazirmatn;
+  src: url("fonts/Vazirmatn-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@page {
+  size: A4;
+  margin: 14mm 12mm 16mm;
+  @bottom-right {
+    content: counter(page);
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    font-size: 9pt;
+    color: #78716c;
+  }
+  @bottom-left {
+    content: "فیتو — بررسی طراحی بک‌اند، پیش از توسعه";
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    font-size: 8.5pt;
+    color: #a8a29e;
+  }
+}
+
+* { box-sizing: border-box; }
+html { direction: rtl; }
+body {
+  margin: 0;
+  color: #1c1917;
+  background: white;
+  font-family: Vazirmatn, Tahoma, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.75;
+}
+
+.cover {
+  height: 248mm;
+  page-break-inside: avoid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8mm 2mm 0;
+}
+.kicker {
+  color: #0f3d3e;
+  font-weight: 700;
+  letter-spacing: 0;
+  font-size: 11pt;
+}
+.cover h1 {
+  margin: 18mm 0 6mm;
+  font-size: 32pt;
+  line-height: 1.35;
+  font-weight: 700;
+  page-break-before: auto;
+}
+.lede {
+  font-size: 13pt;
+  line-height: 1.9;
+  max-width: 42em;
+  color: #292524;
+}
+.meta {
+  border-top: 2px solid #0f3d3e;
+  padding-top: 6mm;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4mm 8mm;
+}
+.meta div { font-size: 10pt; }
+.meta strong { display: block; color: #0f3d3e; }
+
+h1 {
+  font-size: 18pt;
+  line-height: 1.4;
+  margin: 0 0 4mm;
+  page-break-before: always;
+  color: #0f3d3e;
+}
+h2 {
+  font-size: 13.5pt;
+  margin: 7mm 0 2mm;
+  color: #1c1917;
+  page-break-after: avoid;
+}
+h3 {
+  font-size: 11.5pt;
+  margin: 5mm 0 1.5mm;
+  page-break-after: avoid;
+  color: #292524;
+}
+p { margin: 0 0 2.5mm; }
+ul, ol { margin: 0 0 3mm; padding-right: 5mm; }
+li { margin-bottom: 1mm; }
+strong { font-weight: 700; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2mm 0 5mm;
+  font-size: 8.4pt;
+  line-height: 1.45;
+  page-break-inside: auto;
+}
+th, td {
+  border: 0.4pt solid #d6d3d1;
+  padding: 1.4mm 1.6mm;
+  vertical-align: top;
+  text-align: right;
+}
+th {
+  background: #0f3d3e;
+  color: white;
+  font-weight: 500;
+}
+tr { page-break-inside: avoid; }
+tbody tr:nth-child(even) td { background: #fafaf9; }
+
+code {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.86em;
+  direction: ltr;
+  unicode-bidi: isolate;
+  background: #f5f5f4;
+  padding: 0 1.2mm;
+}
+pre.code, .diagram {
+  direction: ltr;
+  text-align: left;
+  background: #fafaf9;
+  border: 0.4pt solid #e7e5e4;
+  padding: 3mm;
+  margin: 2mm 0 5mm;
+  page-break-inside: avoid;
+  overflow: visible;
+}
+h2, h3 { break-after: avoid; }
+.diagram { break-before: avoid; }
+pre.code {
+  white-space: pre-wrap;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 8pt;
+  line-height: 1.45;
+}
+.diagram svg {
+  display: block;
+  width: 100% !important;
+  max-height: 185mm !important;
+  height: auto !important;
+  direction: ltr !important;
+}
+.diagram svg text, .diagram svg span, .diagram svg foreignObject {
+  direction: ltr !important;
+  unicode-bidi: isolate;
+}
+
+.callout {
+  border-right: 3px solid #0f3d3e;
+  background: #f3f7f7;
+  padding: 3mm 4mm;
+  margin: 3mm 0 5mm;
+  page-break-inside: avoid;
+}
+.callout.warn {
+  border-right-color: #9a3412;
+  background: #fff7ed;
+}
+.tag {
+  display: inline-block;
+  border-radius: 2px;
+  padding: 0 1.5mm;
+  font-size: 8pt;
+  font-weight: 700;
+  line-height: 1.6;
+}
+.need { background: #d1fae5; color: #065f46; }
+.proposal { background: #dbeafe; color: #1e3a8a; }
+.open { background: #ffedd5; color: #9a3412; }
+.missing { background: #fee2e2; color: #991b1b; }
+.future { background: #e7e5e4; color: #44403c; }
+
+.uc {
+  border: 0.4pt solid #e7e5e4;
+  padding: 3mm 3.5mm 1mm;
+  margin: 0 0 4mm;
+  page-break-inside: avoid;
+}
+.uc h3 { margin-top: 0; }
+.appendix h1 { margin-bottom: 6mm; }
+.ref {
+  font-weight: 500;
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+}
+
+</style>
+</head>
+<body>
+<section class="cover">
+  <div>
+    <div class="kicker">Fito · بک‌اند · سند بررسی پیش از توسعه</div>
+    <h1>آیا پروژه درست فهمیده شده است؟</h1>
+    <p class="lede">این فایل جمع‌بندی طراحی بک‌اند فیتو است: محصول، نحوه کار، use caseها، رابطه موجودیت‌ها، ERD، جدول‌ها، فاصله تا کد فعلی، تصمیم‌های باز و نقشه اجرا. توسعه و migration هنوز شروع نشده است.</p>
+  </div>
+  <div class="meta">
+    <div><strong>تاریخ بررسی</strong>۹ اکتبر ۲۰۲۶</div>
+    <div><strong>مخزن</strong>Back-end · Laravel 12 · MySQL</div>
+    <div><strong>وضعیت سند</strong>پیشنهاد طراحی، نه کد محصول</div>
+    <div><strong>قدم بعد از تأیید</strong>شروع مرحله F01</div>
+  </div>
+</section>
+
+<h1>۱. چطور این سند را بخوانید</h1>
+<p>چهار برچسب در کل طراحی ثابت‌اند. هیچ پیشنهاد تجاری‌ای به‌عنوان تصمیم نهایی شما ثبت نشده است.</p>
+<table>
+  <thead><tr><th>برچسب</th><th>معنی</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag need">نیاز محصول</span></td><td>در تعریف فعلی فیتو صریح است.</td></tr>
+    <tr><td><span class="tag proposal">پیشنهاد</span></td><td>پیش‌فرض طراحی برای اینکه نسخه اول قابل ساخت باشد. اگر قبل از مرحله مربوط اصلاح شود، همان مرحله عوض می‌شود.</td></tr>
+    <tr><td><span class="tag open">تصمیم باز</span></td><td>هنوز انتخاب شما نیست و روی پول، حریم داده یا انتشار AI اثر دارد.</td></tr>
+    <tr><td><span class="tag missing">در کد نیست</span></td><td>در فایل‌های همین بک‌اند پیاده‌سازی نشده است.</td></tr>
+    <tr><td><span class="tag future">آینده</span></td><td>خود تعریف محصول آن را از نسخه فعلی بیرون گذاشته و شناسه مرحله ندارد.</td></tr>
+  </tbody>
+</table>
+<div class="callout">پیوست‌های آخر همین PDF جزئیات ستون‌ها، نمودارها، سناریوهای داده‌ای و معیار پذیرش هر مرحله را عیناً از سندهای طراحی آورده‌اند. اگر چیزی در بخش اول با پیوست فرق داشت، پیوست فرهنگ داده و نقشه اجرا مرجع جدول و مرحله است.</div>
+
+<h1>۲. فهم محصول</h1>
+<p>فیتو یک SaaS مربیگری است، نه چت‌بات و نه فقط سازنده برنامه تمرین. مربی اشتراک پلتفرم را می‌خرد، ورزشکارهای خودش را وارد می‌کند و برای همان رابطه‌ها برنامه تمرین، برنامه غذا، پیگیری اجرای واقعی، آنالیز بدن و دستیار هوش مصنوعی ارائه می‌دهد. ورزشکار پنل شخصی دارد. مدیر پلتفرم کاربران، پلن‌ها و پرداخت را اداره می‌کند.</p>
+<p>مسئله‌ای که محصول حل می‌کند پراکندگی سابقه بین پیام‌رسان، فایل برنامه و یادداشت است. ارزش محصول این است که تصمیم مربی به تاریخچه واقعی همان ورزشکار وصل بماند و AI داخل روش همان مربی و داده همان رابطه پیشنهاد بدهد، نه اینکه عدد را حدس بزند.</p>
+<p>وب با React و موبایل Android و iOS با Flutter از همین API استفاده می‌کنند. بک‌اند Laravel و MySQL است. مدیریت شعب باشگاه، حضور و غیاب، تجهیزات، چت بلادرنگ، مارکت‌پلیس مربی و تسویه شهریه ورزشکار جزء این محصول نیست.</p>
+
+<h2>چک‌لیست درک</h2>
+<p>اگر ردیفی غلط است، همان را اصلاح کنید. ردیف‌های «پیشنهاد» را هم می‌توانید قبل از مرحله مربوط عوض کنید.</p>
+<table>
+  <thead><tr><th>موضوع</th><th>فهم فعلی</th><th>جنس</th></tr></thead>
+  <tbody>
+    <tr><td>هویت</td><td>یک شخص یک حساب دارد و می‌تواند پروفایل مربی، ورزشکار یا هر دو را داشته باشد. نقش، یک ستون سه‌حالته نیست.</td><td><span class="tag need">نیاز</span></td></tr>
+    <tr><td>ثبت‌نام</td><td>OTP، بعد کد ملی، بعد انتخاب پنل. حساب و پروفایل فقط در پایان موفق و یکجا ساخته می‌شوند. رمز عبور گرفته نمی‌شود. کد ملی فقط ساختار و رقم کنترلی دارد، بدون استعلام مالکیت شماره.</td><td><span class="tag need">نیاز</span></td></tr>
+    <tr><td>ورود کلاینت</td><td>وب با نشست و کوکی روی یک دامنه. موبایل با توکن. OTP ثابت ۱۲۳۴۵ فقط در توسعه.</td><td><span class="tag need">نیاز</span></td></tr>
+    <tr><td>خدمات مستقل ورزشکار</td><td>ورزشکار هویت مستقل دارد، ولی مسیر عمومی خدمات بدون مربی، انتخاب مربی از بازار، و برنامه AI بدون مربی آینده است.</td><td><span class="tag future">آینده</span></td></tr>
+    <tr><td>چند مربی</td><td>یک ورزشکار می‌تواند هم‌زمان با چند مربی رابطه داشته باشد. داده هر رابطه از رابطه دیگر جداست.</td><td><span class="tag need">نیاز</span></td></tr>
+    <tr><td>مرز داده</td><td>محدوده کاری همان پروفایل مربی است. موجودیت باشگاه یا workspace ساخته نمی‌شود.</td><td><span class="tag proposal">پیشنهاد</span></td></tr>
+    <tr><td>پول</td><td>پرداخت مربی به پلتفرم است، نه شهریه ورزشکار. مبلغ در دیتابیس ریال صحیح است. مثال پنج میلیون تومان اگر تومان باشد ۵۰ میلیون ریال است.</td><td><span class="tag open">باز</span></td></tr>
+    <tr><td>پلن</td><td>قیمت، مدت، ظرفیت، قابلیت‌ها و سهمیه AI در کد ثابت نیستند. تعریف پلن، سفارش، تلاش پرداخت، پرداخت تأییدشده، دوره دسترسی و مصرف از هم جدا هستند.</td><td><span class="tag need">نیاز</span></td></tr>
+    <tr><td>تمرین</td><td>برنامه تجویزی با جلسه انجام‌شده یکی نیست. ویرایش برنامه تاریخچه قبلی را عوض نمی‌کند.</td><td><span class="tag need">نیاز</span></td></tr>
+    <tr><td>رکورد</td><td>رکورد به ست ثبت‌شده وصل است. حداکثر وزن، مدت، مسافت و یک‌تکرار بیشینه تخمینیِ نسخه‌دار ذخیره می‌شوند. ردیف متغیر «رکورد جاری» نداریم.</td><td><span class="tag proposal">پیشنهاد</span></td></tr>
+    <tr><td>تغذیه</td><td>مبنا یا هر ۱۰۰ گرم است یا هر واحد. تغییر ماده غذایی گزارش برنامه قبلی را عوض نمی‌کند. غذای واقعاً خورده‌شده در این نسخه جدول ندارد.</td><td><span class="tag need">نیاز</span> + آینده برای مصرف واقعی</td></tr>
+    <tr><td>بدن</td><td>هر نوبت می‌تواند ناقص باشد. صفر جای مقدار خالی نیست. عضله حرکت، ناحیه مدل بدن و اندازه‌گیری سه مفهوم جدا هستند. عکس بدن و برچسب «عضله ضعیف» واقعیت محصول نیستند.</td><td><span class="tag need">نیاز</span></td></tr>
+    <tr><td>یادداشت</td><td>یادداشت داخلی مربی با پیامی که ورزشکار می‌بیند یکی نیست. اعلان، پیام‌رسان بلادرنگ نیست.</td><td><span class="tag need">نیاز</span></td></tr>
+    <tr><td>هوش مصنوعی</td><td>برای هر مربی مدل جدا آموزش داده نمی‌شود. تنظیمات، دانش و ابزارها به همان مربی محدودند. عدد از بک‌اند می‌آید. برنامه AI تا تأیید مربی به ورزشکار تخصیص نمی‌شود.</td><td><span class="tag proposal">پیشنهاد</span> برای سیاست انتشار</td></tr>
+    <tr><td>کد فعلی</td><td>ثبت‌نام OTP در این مخزن پیاده‌سازی نشده. آنچه هست اسکلت Laravel 12 است.</td><td><span class="tag missing">در کد نیست</span></td></tr>
+  </tbody>
+</table>
+
+<h1>۳. بازیگران و مرز دسترسی</h1>
+<table>
+  <thead><tr><th>بازیگر</th><th>موجودیت</th><th>چه کار می‌کند</th><th>چه چیزی را نمی‌بیند</th></tr></thead>
+  <tbody>
+    <tr><td>شخص</td><td><code>users</code></td><td>ورود و مالکیت پروفایل‌ها</td><td>داده مربی دیگر</td></tr>
+    <tr><td>مربی</td><td><code>coach_profiles</code></td><td>ورزشکارهای خودش، برنامه، تحلیل، دستیار، در حد پلن خریده‌شده</td><td>داده مربی دیگر، یادداشت را به ورزشکار نشان نمی‌دهد</td></tr>
+    <tr><td>ورزشکار</td><td><code>athlete_profiles</code></td><td>برنامه، اجرای واقعی، رکورد، بدنِ مجاز، بازخورد</td><td>یادداشت داخلی مربی، رابطه مربی‌های دیگر با هم</td></tr>
+    <tr><td>مدیر پلتفرم</td><td><code>platform_roles</code></td><td>حساب، پلن، پرداخت، تعلیق</td><td>در نسخه اول محتوای خصوصی تمرین و بدن را نمی‌خواند</td></tr>
+    <tr><td>رابطه</td><td><code>coaching_relationships</code></td><td>مجوز برنامه و مشاهده داده همان همکاری</td><td>بعد از پایان، نوشتن جدید با آن شناسه بسته است</td></tr>
+  </tbody>
+</table>
+<p>یک مربی باسابقه می‌تواند خودش ورزشکارِ مربی باتجربه‌تر باشد. رابطه شخص با خودش ساخته نمی‌شود. مدیر پلتفرم می‌تواند کاربر معمولی هم باشد، ولی نقش مدیریتی از پروفایل مربی جداست.</p>
+<div class="callout">پیشنهاد مالکیت: پلن، پرداخت، ورزشکارها، برنامه‌ها و دستیار به پروفایل مربی وصل‌اند. ورزشکار مشتری پلتفرم برای شهریه نیست. داده شخصی او، مثل آنالیز خصوصی، خودکار به همه مربی‌هایش نمی‌رسد.</div>
+
+<h1>۴. نحوه کار، از عضویت تا پیگیری</h1>
+<p>این مسیر، جریان اصلی ارزش است. نام‌ها فقط برای خواندن‌اند.</p>
+<ol>
+  <li>سارا شماره می‌دهد و OTP را تأیید می‌کند. هنوز حسابی ساخته نشده است.</li>
+  <li>کد ملی و نام و پنل مربی را می‌دهد. در یک تراکنش حساب و پروفایل مربی ساخته می‌شود. اگر پنل «هر دو» باشد پروفایل ورزشکار هم ساخته می‌شود، بدون اینکه خدمات مستقل ورزشکار فعال شود.</li>
+  <li>سارا یک پلن می‌خرد. تا وقتی درگاه مبلغ را دقیقاً برابر سفارش تأیید نکند، دوره دسترسی ساخته نمی‌شود. تکرار callback دوره دوم نمی‌سازد.</li>
+  <li>سارا شماره رضا را دعوت می‌کند. دعوت، حساب رضا را نمی‌سازد و ظرفیت را هم هنوز مصرف نمی‌کند.</li>
+  <li>رضا OTP همان شماره را تأیید می‌کند. اگر حساب نداشته باشد، کد ملی و نام و پروفایل ورزشکار و رابطه در یک تراکنش ساخته می‌شوند. اگر ظرفیت پلن پر باشد این تراکنش برمی‌گردد.</li>
+  <li>سارا برنامه تمرین را به‌صورت پیش‌نویس می‌نویسد و منتشر می‌کند. انتشار قفل می‌شود. تخصیص، رضا را به همان نسخه وصل می‌کند، نه به «آخرین ویرایش آینده».</li>
+  <li>رضا جلسه را با ست‌های واقعی ثبت می‌کند. سه ست با تکرار ۱۰ و ۹ و ۸ سه ردیف است، نه کپی تجویز. اگر رکورد شکسته شود، رویداد رکورد به همان ست وصل می‌شود.</li>
+  <li>سارا برنامه را عوض می‌کند. نسخه جدید ساخته می‌شود. جلسه قبلی رضا همچنان نسخه قبلی را نشان می‌دهد.</li>
+  <li>همین الگو برای غذا هست: تغییر ارزش غذایی یک ماده، جمع برنامه قبلاً منتشرشده را عوض نمی‌کند.</li>
+  <li>آنالیز بدن می‌تواند فقط وزن داشته باشد. درصد چربی خالی، صفر ذخیره نمی‌شود. اگر قد موجود باشد BMI با فرمول مشخص محاسبه می‌شود.</li>
+  <li>رضا سختی یا درد را روی جلسه، حرکت یا موضوع عمومی همان رابطه می‌نویسد. یادداشت داخلی سارا در پاسخ API رضا نیست.</li>
+  <li>دستیار سارا فقط روش سارا و داده رابطه رضا را می‌بیند. پیشنهاد برنامه تا تأیید سارا وارد برنامه رضا نمی‌شود.</li>
+  <li>اگر رابطه تمام شود، تاریخچه همان رابطه برای سارا خواندنی می‌ماند و داده خصوصی رضا یا مربی دیگر برای او باز نمی‌شود.</li>
+  <li>اگر پلن تمام شود، دعوت و نوشتن جدید بسته می‌شود. رابطه‌ها و سابقه پاک نمی‌شوند.</li>
+</ol>
+
+<h1>۵. Use caseها</h1>
+
+<article class="uc">
+  <h3>UC-01 ثبت‌نام و ورود</h3>
+  <p><strong>بازیگر:</strong> شخص جدید یا کاربر موجود. <strong>پیش‌شرط:</strong> شماره به شکل ۰۹ نرمال شود.</p>
+  <p><strong>جریان اصلی:</strong> درخواست OTP، تأیید کد، سپس برای کاربر جدید دریافت کد ملی و نام و پنل و ساخت اتمیک حساب و پروفایل. برای کاربر موجود، همان OTP ورود است و نشست وب یا توکن موبایل صادر می‌شود.</p>
+  <p><strong>استثنا:</strong> شماره یا کد ملی تکراری حساب دوم نمی‌سازد. کد ملی غلط رد می‌شود. OTP منقضی یا بیش از پنج بار غلط مصرف نمی‌شود. کاربر معلق وارد نمی‌شود. کد ۱۲۳۴۵ در production پذیرفته نیست.</p>
+  <p><strong>داده:</strong> تا موفقیت نهایی <code>users</code> ساخته نمی‌شود. پیش‌نویس و چالش OTP جدا هستند.</p>
+</article>
+
+<article class="uc">
+  <h3>UC-02 خرید پلن و فعال شدن دسترسی</h3>
+  <p><strong>بازیگر:</strong> مربی، مدیر پلتفرم، درگاه. <strong>پیش‌شرط:</strong> پروفایل مربی و پلن قابل‌فروش.</p>
+  <p><strong>جریان اصلی:</strong> مدیر قیمت و مدت و ظرفیت و قابلیت‌ها را در داده تعریف می‌کند. مربی سفارش می‌سازد. هر تلاش پرداخت ردیف جدا دارد. فقط تأیید مبلغِ برابر با سفارش، یک پرداخت و یک دوره دسترسی می‌سازد.</p>
+  <p><strong>استثنا:</strong> callback تکراری بی‌اثر است. اختلاف مبلغ دسترسی نمی‌دهد. هر مربی هم‌زمان فقط یک سفارش باز دارد. تغییر بعدی پلن، خرید قبلی را عوض نمی‌کند.</p>
+  <p><strong>داده:</strong> <code>plans</code>، <code>orders</code>، <code>payment_attempts</code>، <code>payments</code>، <code>access_periods</code> از هم جدا هستند.</p>
+</article>
+
+<article class="uc">
+  <h3>UC-03 دعوت ورزشکار بدون حساب</h3>
+  <p><strong>بازیگر:</strong> مربی و سپس صاحب شماره. <strong>پیش‌شرط:</strong> دوره فعال.</p>
+  <p><strong>جریان اصلی:</strong> مربی شماره را دعوت می‌کند. صاحب شماره با OTP ثابت می‌کند شماره مال اوست، کد ملی و نام را می‌دهد و حساب، پروفایل ورزشکار و رابطه ساخته می‌شود.</p>
+  <p><strong>استثنا:</strong> دعوت حساب نمی‌سازد. دعوت تکراری همان مربی، همان دعوت باز را برمی‌گرداند. دو پذیرش هم‌زمان برای آخرین ظرفیت، فقط یک رابطه می‌سازند. دو درخواست ساخت حساب برای یک شماره، یک کاربر می‌سازند.</p>
+</article>
+
+<article class="uc">
+  <h3>UC-04 اتصال ورزشکار دارای حساب</h3>
+  <p><strong>بازیگر:</strong> مربی و ورزشکار موجود. <strong>پیش‌شرط:</strong> شماره قبلاً <code>users</code> دارد.</p>
+  <p><strong>جریان اصلی:</strong> دعوت با همان شماره ساخته می‌شود. پذیرش بعد از OTP، اگر پروفایل ورزشکار نباشد آن را می‌سازد و رابطه را فعال می‌کند. اگر رابطه قبلی پایان یافته باشد همان ردیف دوباره فعال می‌شود، نه ردیف دوم.</p>
+  <p><strong>استثنا:</strong> رابطه فعال تکراری کار جدیدی نمی‌کند. دو مربی می‌توانند جداگانه به همان شخص وصل شوند. شخص نمی‌تواند مربی خودش باشد. ظرفیت هر مربی جدا کنترل می‌شود.</p>
+</article>
+
+<article class="uc">
+  <h3>UC-05 ساخت و تخصیص برنامه تمرین</h3>
+  <p><strong>بازیگر:</strong> مربی. <strong>پیش‌شرط:</strong> رابطه فعال و قابلیت برنامه تمرین روی دوره.</p>
+  <p><strong>جریان اصلی:</strong> پیش‌نویس با روزها و حرکت‌ها ساخته می‌شود. انتشار قفل است. تخصیص به شناسه همان نسخه و همان رابطه وصل می‌شود. ورزشکار همان نسخه را می‌بیند.</p>
+  <p><strong>استثنا:</strong> ویرایش بعدی نسخه جدید است. حرکت خصوصی مربی دیگر قابل انتخاب نیست. همه حرکت‌ها وزنه‌ای نیستند؛ نوع اجرا یکی از وزن‌وتکرار، تکرار، مدت یا مسافت است.</p>
+</article>
+
+<article class="uc">
+  <h3>UC-06 ثبت جلسه و رکورد</h3>
+  <p><strong>بازیگر:</strong> ورزشکار. مربی نتیجه را می‌خواند. <strong>پیش‌شرط:</strong> حساب ورزشکار.</p>
+  <p><strong>جریان اصلی:</strong> جلسه با تاریخ مدنی ثبت می‌شود. هر ست واقعی ردیف خودش را دارد و در صورت انجام داخل یک رابطه فعال، شناسه آن رابطه را می‌گیرد. شکسته‌شدن حداکثر وزن، مدت، مسافت یا یک‌تکرار بیشینه تخمینی، رویداد رکورد می‌سازد.</p>
+  <p><strong>استثنا:</strong> رکورد ضعیف‌تر ذخیره نمی‌شود. تغییر برنامه، ست‌های قدیمی را بازنویسی نمی‌کند. بعد از پایان رابطه، جلسه جدید آن شناسه را نمی‌گیرد.</p>
+</article>
+
+<article class="uc">
+  <h3>UC-07 برنامه غذا</h3>
+  <p><strong>بازیگر:</strong> مربی و ورزشکار خواننده. <strong>پیش‌شرط:</strong> قابلیت تغذیه و رابطه فعال.</p>
+  <p><strong>جریان اصلی:</strong> ماده غذایی مبنای صریح دارد. هر ویرایش، revision جدید و تغییرناپذیر است. اقلام نسخه منتشرشده به revision همان زمان وصل‌اند. جمع انرژی و درشت‌مغذی هنگام خواندن محاسبه می‌شود.</p>
+  <p><strong>استثنا:</strong> تغییر بعدی غذا، گزارش نسخه قبلی را عوض نمی‌کند. مصرف واقعی غذا use case این نسخه نیست.</p>
+</article>
+
+<article class="uc">
+  <h3>UC-08 آنالیز بدن و مقایسه پیشرفت</h3>
+  <p><strong>بازیگر:</strong> ورزشکار یا مربی همان رابطه. <strong>پیش‌شرط:</strong> برای نوشتن مربی، قابلیت آنالیز روی دوره.</p>
+  <p><strong>جریان اصلی:</strong> یک نوبت ثبت با زمان اندازه‌گیری ساخته می‌شود و فقط معیارهای واقعاً موجود مقدار می‌گیرند. اگر وزن و قد قابل استفاده باشند BMI محاسبه‌شده با فرمول <code>bmi_v1</code> کنار داده دستگاه می‌ماند. مقایسه دو تاریخ از همین ردیف‌ها خوانده می‌شود.</p>
+  <p><strong>استثنا:</strong> مشاهده خصوصی را مربی نمی‌بیند. مشاهده رابطه‌ای را مربی دیگر نمی‌بیند. عکس و قضاوت «رشد نامناسب» ساخته نمی‌شود.</p>
+</article>
+
+<article class="uc">
+  <h3>UC-09 بازخورد، یادداشت داخلی و اعلان</h3>
+  <p><strong>بازیگر:</strong> ورزشکار و مربی همان رابطه.</p>
+  <p><strong>جریان اصلی:</strong> بازخورد به جلسه، قلم برنامه، خود حرکت، یا موضوع عمومی همان رابطه وصل است. مربی می‌تواند پاسخ مشترک یا یادداشت فقط‌مربی بنویسد. برنامه جدید، رکورد، آنالیز و پاسخ مربی اعلان درون‌برنامه‌ای می‌سازند.</p>
+  <p><strong>استثنا:</strong> ورزشکار یادداشت داخلی را نمی‌خواند. این use case چت بلادرنگ نیست.</p>
+</article>
+
+<article class="uc">
+  <h3>UC-10 پیشنهاد دستیار و انتشار</h3>
+  <p><strong>بازیگر:</strong> مربی، و ورزشکار فقط اگر قابلیت پلن اجازه بدهد. <strong>پیش‌شرط:</strong> مربی روش کارش را قبلاً ثبت کرده باشد و سهمیه دوره تمام نشده باشد.</p>
+  <p><strong>جریان اصلی:</strong> گفتگو به نسخه تنظیمات همان مربی وصل است. ابزارها فقط داده همان مربی و همان رابطه را از بک‌اند می‌خوانند. خروجی برنامه در وضعیت پیش‌نویس می‌ماند. تأیید مربی آن را به نسخه معمولی برنامه تبدیل می‌کند و بعد تخصیص، مثل UC-05 یا UC-07، انجام می‌شود.</p>
+  <p><strong>استثنا:</strong> متن کاربر دسترسی را عوض نمی‌کند. دانش مربی دیگر بازیابی نمی‌شود. بدون تأیید، برنامه‌ای به ورزشکار تخصیص نمی‌شود. سهمیه آخر در دو درخواست هم‌زمان فقط یک‌بار مصرف می‌شود. دستیار جایگزین پزشک نیست.</p>
+</article>
+
+<article class="uc">
+  <h3>UC-11 پایان رابطه</h3>
+  <p><strong>بازیگر:</strong> مربی یا ورزشکار همان رابطه.</p>
+  <p><strong>جریان اصلی:</strong> همان ردیف رابطه پایان می‌یابد و رویداد پایان ذخیره می‌شود. تخصیص‌های فعال آن رابطه بسته می‌شوند. جلسه، نسخه، آنالیز و پیام حذف نمی‌شوند.</p>
+  <p><strong>نتیجه دسترسی پیشنهادی:</strong> مربی سابقه دارای شناسه همان رابطه را فقط می‌خواند. ظرفیت دوره برای دعوت بعدی آزاد می‌شود.</p>
+</article>
+
+<article class="uc">
+  <h3>UC-12 انقضا، شکست پرداخت و ظرفیت مازاد</h3>
+  <p><strong>بازیگر:</strong> سامانه و مربی. <strong>پیش‌شرط:</strong> دوره یا سفارش موجود.</p>
+  <p><strong>جریان اصلی:</strong> با عبور از تاریخ پایان، دوره منقضی می‌شود. اگر دوره زمان‌بندی‌شده رسیده باشد فعال می‌شود. شکست پرداخت فقط همان تلاش را ناموفق می‌کند.</p>
+  <p><strong>پیشنهاد تجاری:</strong> ورزشکارهای فعلی با کاهش ظرفیت خودکار قطع نمی‌شوند. تا وقتی تعداد رابطه‌های فعال از ظرفیت بیشتر است، دعوت و فعال‌سازی مجدد رد می‌شود. تمدید خودکار بانکی و تقسیط مابه‌التفاوت در این نسخه نیست.</p>
+</article>
+
+<h1>۶. رابطه‌های اصلی</h1>
+<p>نمودار کامل در پیوست الف است. این جدول برای مرور سریع cardinality است.</p>
+<table>
+  <thead><tr><th>از</th><th>به</th><th>نسبت</th><th>معنی</th></tr></thead>
+  <tbody>
+    <tr><td>کاربر</td><td>پروفایل مربی</td><td>۱ به ۰..۱</td><td>حداکثر یک محدوده مربی</td></tr>
+    <tr><td>کاربر</td><td>پروفایل ورزشکار</td><td>۱ به ۰..۱</td><td>حداکثر یک پنل ورزشکار</td></tr>
+    <tr><td>کاربر</td><td>نقش پلتفرم</td><td>۱ به ۰..n</td><td>مدیر بودن جدا از پروفایل است</td></tr>
+    <tr><td>مربی</td><td>سفارش و دوره</td><td>۱ به n</td><td>تاریخچه خرید؛ هم‌زمان یک دوره فعال</td></tr>
+    <tr><td>سفارش</td><td>تلاش پرداخت</td><td>۱ به n</td><td>چند تلاش، یک پرداخت موفق</td></tr>
+    <tr><td>سفارش</td><td>پرداخت و دوره</td><td>۱ به ۰..۱</td><td>callback تکراری دوره دوم نمی‌سازد</td></tr>
+    <tr><td>مربی</td><td>دعوت</td><td>۱ به n</td><td>برای هر شماره فقط یک دعوت باز</td></tr>
+    <tr><td>مربی + ورزشکار</td><td>رابطه</td><td>یک ردیف برای هر زوج</td><td>پایان و شروع دوباره همان ردیف است</td></tr>
+    <tr><td>ورزشکار</td><td>رابطه</td><td>۱ به n</td><td>چند مربی، داده‌های جدا</td></tr>
+    <tr><td>برنامه</td><td>نسخه</td><td>۱ به n</td><td>نسخه منتشرشده تغییر نمی‌کند</td></tr>
+    <tr><td>نسخه</td><td>تخصیص</td><td>۱ به n</td><td>تخصیص به نسخه زمان خودش می‌ماند</td></tr>
+    <tr><td>رابطه</td><td>جلسه</td><td>۱ به n</td><td>اجرای واقعی، نه کپی تجویز</td></tr>
+    <tr><td>جلسه</td><td>ست</td><td>۱ به n</td><td>تکرارهای واقعی هر کدام یک ردیف</td></tr>
+    <tr><td>ست</td><td>رویداد رکورد</td><td>۱ به ۰..n</td><td>فقط وقتی رکورد شکسته شود</td></tr>
+    <tr><td>غذا</td><td>revision تغذیه</td><td>۱ به n</td><td>تاریخچه ارزش غذایی</td></tr>
+    <tr><td>قلم وعده</td><td>revision</td><td>n به ۱</td><td>گزارش قبلی ثابت می‌ماند</td></tr>
+    <tr><td>نوبت بدن</td><td>مقدار معیار</td><td>۱ به n</td><td>معیار غایب ردیف ندارد</td></tr>
+    <tr><td>رابطه</td><td>رشته بازخورد</td><td>۱ به n</td><td>موضوع مشخص یا عمومی</td></tr>
+    <tr><td>مربی</td><td>نسخه روش AI و دانش</td><td>۱ به n</td><td>گفتگو به نسخه همان زمان وصل است</td></tr>
+    <tr><td>تولید AI</td><td>نسخه برنامه</td><td>۰..۱</td><td>فقط پس از تأیید و تبدیل</td></tr>
+  </tbody>
+</table>
+
+<h2>سه مفهوم بدن که نباید یکی شوند</h2>
+<table>
+  <thead><tr><th>مفهوم</th><th>جدول</th><th>مثال</th></tr></thead>
+  <tbody>
+    <tr><td>عضله هدف حرکت</td><td><code>muscles</code></td><td>سینه‌ای بزرگ، در حرکت پرس</td></tr>
+    <tr><td>ناحیه نمایش مدل بدن</td><td><code>body_model_areas</code></td><td>کدی که فرانت برای هایلایت لازم دارد</td></tr>
+    <tr><td>اندازه‌گیری</td><td><code>body_observation_values</code></td><td>دور سینه به میلی‌متر، درصد چربی، وزن</td></tr>
+  </tbody>
+</table>
+
+<h1>۷. کدبیس فعلی</h1>
+<div class="callout warn">گزارش «ثبت‌نام حداقلی پیاده‌سازی شده» با فایل‌های این مخزن نمی‌خواند. OTP، کد ملی، پروفایل، پلن، تمرین و API نسخهٔ v1 در کد نیستند.</div>
+<table>
+  <thead><tr><th>قطعه</th><th>وضعیت واقعی فایل‌ها</th></tr></thead>
+  <tbody>
+    <tr><td>فریم‌ورک</td><td>Laravel 12 و PHP 8.2. وابستگی محصولی جز <code>laravel/framework</code> و <code>laravel/tinker</code> نیست. Sanctum نصب نیست.</td></tr>
+    <tr><td>کاربر</td><td><code>users</code> ستون‌های <code>name</code> و <code>email</code> یکتا و <code>password</code> اجباری دارد. این با ثبت‌نام بدون رمز و با شماره در تعارض است و در F01 با migration جدید اصلاح می‌شود، نه با بازنویسی تاریخچه migration اگر قبلاً اجرا شده باشد.</td></tr>
+    <tr><td>مسیرها</td><td>فقط <code>routes/web.php</code> و <code>routes/console.php</code>. مسیر API وجود ندارد. صفحه اصلی خوش‌آمد Laravel است.</td></tr>
+    <tr><td>احراز هویت</td><td>فقط guard نشست <code>web</code>. توکن موبایل تعریف نشده است.</td></tr>
+    <tr><td>migrationها</td><td>کاربران و نشست و بازیابی رمز، cache، و jobs. جدول دامنه فیتو وجود ندارد.</td></tr>
+    <tr><td>تست</td><td>یک تست که صفحه اصلی وضعیت ۲۰۰ می‌دهد. PHPUnit روی SQLite حافظه‌ای است.</td></tr>
+    <tr><td>دیتابیس زنده</td><td><code>.env</code> به MySQL و دیتابیس <code>Fito</code> اشاره می‌کند. چون <code>mysql</code> در PATH نبود و <code>vendor</code> نصب نبود، محتوای زنده دیتابیس بررسی نشد.</td></tr>
+    <tr><td>سند قدیمی محصول</td><td>در مخزن سند دامنه‌ای که طراحی را ممنوع کرده باشد پیدا نشد. README فعلی معرفی خود Laravel است و عوض نشده است.</td></tr>
+  </tbody>
+</table>
+<p>زیرساختی که می‌ماند: نشست، cache، صف و job. جدول بازیابی رمز محصول نیست و در F01 حذف می‌شود. جدول توکن را خود Sanctum در F01 می‌سازد.</p>
+
+<h1>۸. قراردادهایی که روی همه جدول‌ها اعمال می‌شوند</h1>
+<table>
+  <thead><tr><th>موضوع</th><th>قرارداد پیشنهادی</th></tr></thead>
+  <tbody>
+    <tr><td>پول</td><td>عدد صحیح ریال. تومان فقط اگر در نمایش لازم باشد با ضریب ۱۰ تبدیل می‌شود.</td></tr>
+    <tr><td>وزن و طول</td><td>گرم و میلی‌متر، صحیح. کلاینت قبل از ارسال تبدیل می‌کند.</td></tr>
+    <tr><td>تغذیه</td><td>کیلوکالری صحیح و درشت‌مغذی به میلی‌گرم. گرد کردن half-up.</td></tr>
+    <tr><td>درصد</td><td>basis point. ۱۸٫۲۵ درصد برابر ۱۸۲۵.</td></tr>
+    <tr><td>زمان</td><td>لحظه به UTC. تاریخ مدنی تمرین با تقویم <code>Asia/Tehran</code>.</td></tr>
+    <tr><td>مقدار خالی</td><td>ردیف ساخته نمی‌شود. صفر مقدار واقعی است، نه جایگزین تهی.</td></tr>
+    <tr><td>JSON</td><td>فقط پیش‌نویس AI و بدنه خام درگاه. ست، غذا، قیمت و دسترسی جدول رابطه‌ای هستند.</td></tr>
+    <tr><td>حذف</td><td>پرداخت، نسخه منتشرشده، revision غذا و رویداد رکورد پاک یا بازنویسی نمی‌شوند.</td></tr>
+    <tr><td>رقابت</td><td>ظرفیت ورزشکار و سهمیه AI با قفل ردیف دوره، داخل تراکنش کنترل می‌شود.</td></tr>
+  </tbody>
+</table>
+<p>۵۲ جدول محصول در پیوست ب با ستون، تهی‌بودن، کلید و ایندکس آمده‌اند. فهرست کوتاه‌شان این است:</p>
+<table>
+  <thead><tr><th>دامنه</th><th>جدول‌ها</th></tr></thead>
+  <tbody>
+    <tr><td>هویت</td><td><code>users</code>، <code>signup_drafts</code>، <code>otp_challenges</code>، <code>platform_roles</code>، <code>coach_profiles</code>، <code>athlete_profiles</code></td></tr>
+    <tr><td>تجاری</td><td><code>plans</code>، <code>plan_features</code>، <code>orders</code>، <code>order_features</code>، <code>payment_attempts</code>، <code>payments</code>، <code>access_periods</code>، <code>ai_usage_entries</code></td></tr>
+    <tr><td>رابطه</td><td><code>athlete_invitations</code>، <code>coaching_relationships</code>، <code>coaching_relationship_events</code></td></tr>
+    <tr><td>حرکت</td><td><code>muscles</code>، <code>body_model_areas</code>، <code>muscle_body_area</code>، <code>exercises</code>، <code>exercise_media</code>، <code>exercise_muscles</code></td></tr>
+    <tr><td>تمرین</td><td><code>workout_programs</code>، <code>workout_program_versions</code>، <code>workout_days</code>، <code>workout_day_exercises</code>، <code>workout_assignments</code></td></tr>
+    <tr><td>عملکرد</td><td><code>workout_sessions</code>، <code>workout_session_sets</code>، <code>personal_record_events</code></td></tr>
+    <tr><td>تغذیه</td><td><code>foods</code>، <code>food_nutrient_revisions</code>، <code>meal_plans</code>، <code>meal_plan_versions</code>، <code>meal_days</code>، <code>meals</code>، <code>meal_items</code>، <code>meal_assignments</code></td></tr>
+    <tr><td>بدن</td><td><code>body_metric_definitions</code>، <code>body_observations</code>، <code>body_observation_values</code></td></tr>
+    <tr><td>بازخورد</td><td><code>feedback_threads</code>، <code>feedback_messages</code>، <code>notifications</code></td></tr>
+    <tr><td>AI</td><td><code>coach_ai_setting_versions</code>، <code>coach_knowledge_documents</code>، <code>coach_knowledge_chunks</code>، <code>ai_conversations</code>، <code>ai_messages</code>، <code>ai_generations</code></td></tr>
+  </tbody>
+</table>
+
+<h1>۹. تصمیم‌هایی که قبل از کدنویسی باید دیده شوند</h1>
+<p>کار فنی برگشت‌پذیر، مثل Sanctum و پیشوند <code>/api/v1</code>، متوقف‌کننده نیست. این هشت مورد اگر با قصد شما فرق دارند باید گفته شوند. در غیر این صورت مرحله مربوط با همین پیش‌فرض ساخته می‌شود.</p>
+<table>
+  <thead><tr><th>شناسه</th><th>پیش‌فرض</th><th>اگر عوض شود</th></tr></thead>
+  <tbody>
+    <tr><td>D-01</td><td>مرز داده، پروفایل مربی است نه workspace.</td><td>قبل از F02 باید اشتراک چندمربی طراحی شود.</td></tr>
+    <tr><td>D-02</td><td>ذخیره و درگاه به ریال است.</td><td>قبل از F02 واحد ستون‌های پول عوض می‌شود.</td></tr>
+    <tr><td>D-03</td><td>بعد از پایان رابطه، تاریخچه همان رابطه برای مربی فقط‌خواندنی است.</td><td>سیاست خواندن از F03 به بعد عوض می‌شود.</td></tr>
+    <tr><td>D-04</td><td>انقضا و کاهش ظرفیت، ورزشکار را خودکار قطع نمی‌کند.</td><td>قبل از F03 باید قاعده انتخاب ورزشکار مازاد مشخص شود.</td></tr>
+    <tr><td>D-05</td><td>آنالیز یا خصوصی است یا فقط برای یک رابطه.</td><td>قبل از F08 دیده‌شدن برای چند مربی عوض می‌شود.</td></tr>
+    <tr><td>D-06</td><td>برنامه AI بدون تأیید مربی منتشر نمی‌شود. دسترسی ورزشکار به AI پیش‌فرض خاموش است.</td><td>F10 مسیر انتشار را عوض می‌کند.</td></tr>
+    <tr><td>D-07</td><td>حرکت و غذای بدون مالک، کاتالوگ پلتفرم است و مربی می‌تواند مورد خصوصی داشته باشد.</td><td>قبل از F04 و F07 کاتالوگ فقط عمومی می‌ماند.</td></tr>
+    <tr><td>D-08</td><td>نام درگاه واقعی هنوز لازم نیست. F02 دامنه پرداخت و درگاه آزمایشی را می‌سازد.</td><td>اتصال تولیدی وقتی مرچنت مشخص شد اضافه می‌شود.</td></tr>
+  </tbody>
+</table>
+
+<h1>۱۰. نقشه راه اجرا</h1>
+<p>شناسه‌ها ثابت‌اند. با گفتن «برو مرحله F01» فقط همان مرحله اجرا می‌شود. جزئیات تست و خارج‌ازمحدوده در پیوست هـ است.</p>
+<table>
+  <thead><tr><th>مرحله</th><th>نتیجه قابل استفاده</th><th>پیش‌نیاز</th></tr></thead>
+  <tbody>
+    <tr><td>F01</td><td>ثبت‌نام و ورود OTP، پروفایل، نشست وب و توکن موبایل</td><td>مخزن فعلی</td></tr>
+    <tr><td>F02</td><td>پلن، سفارش، پرداخت تکرارناپذیر، دوره دسترسی</td><td>F01</td></tr>
+    <tr><td>F03</td><td>دعوت، اتصال ورزشکار، پایان رابطه، قفل ظرفیت</td><td>F01 و F02</td></tr>
+    <tr><td>F04</td><td>کاتالوگ حرکت، عضله و ناحیه مدل بدن</td><td>F01</td></tr>
+    <tr><td>F05</td><td>برنامه تمرین نسخه‌دار و تخصیص</td><td>F03 و F04</td></tr>
+    <tr><td>F06</td><td>جلسه واقعی و رکورد</td><td>F05</td></tr>
+    <tr><td>F07</td><td>تغذیه، revision و برنامه غذا</td><td>F03</td></tr>
+    <tr><td>F08</td><td>آنالیز ناقص، BMI و مقایسه دو تاریخ</td><td>F01 و F03</td></tr>
+    <tr><td>F09</td><td>بازخورد، یادداشت داخلی و اعلان</td><td>F03 و در صورت موضوع تخصصی F06 و F08</td></tr>
+    <tr><td>F10</td><td>دستیار محدود به مربی، سهمیه و تأیید قبل از انتشار</td><td>F02 تا F09</td></tr>
+    <tr><td>F11</td><td>آزمون انتها‌به‌انتها، بدون قابلیت جدید</td><td>F01 تا F10</td></tr>
+  </tbody>
+</table>
+<p>مسیر بحرانی F01 تا F06 است. بعد تغذیه و بدن، سپس بازخورد، دستیار و آزمون یکپارچه. این‌ها شناسه مرحله ندارند: مصرف واقعی غذا، عکس بدن، خدمات مستقل بدون مربی، شهریه و تسویه ورزشکار، چت بلادرنگ، مارکت‌پلیس و مدیریت باشگاه.</p>
+<div class="callout">بعد از همین بررسی، توسعه با F01 شروع می‌شود: جایگزینی هویت ایمیلی با شماره و کد ملی، OTP، ساخت اتمیک پروفایل، و دو حالت نشست وب و توکن موبایل. در آن مرحله هنوز پلن، دعوت و برنامه ساخته نمی‌شود.</div>
+
+<section class="appendix"><h1>پیوست الف. نمودار موجودیت‌ها</h1><h2>نمودار موجودیت‌ها</h2>
+<p>نمودارها همان مدل <span class="ref">02-database.md</span> هستند و برای خوانایی دامنه به دامنه جدا شده‌اند. <code>users</code> در چند نمودار تکرار شده تا مرز هر دامنه پیدا باشد. برچسب خط‌ها شناسه انگلیسی رابطه است تا در چاپ راست‌به‌چپ به‌هم نریزد. معنی فارسی در بخش «رابطه‌های اصلی» سند بررسی آمده است.</p>
+<h2>هویت و پروفایل</h2>
+<div class="diagram"><pre class="mermaid">
+erDiagram
+    users ||--o| coach_profiles : coach
+    users ||--o| athlete_profiles : athlete
+    users ||--o{ platform_roles : admin
+    users ||--o{ signup_drafts : consumes
+    signup_drafts ||--o{ otp_challenges : signup
+    athlete_invitations ||--o{ otp_challenges : invite
+    coach_profiles ||--o{ coach_ai_setting_versions : versions
+    coach_profiles |o--o| coach_ai_setting_versions : current
+</pre></div>
+<h2>پلن و دسترسی</h2>
+<div class="diagram"><pre class="mermaid">
+erDiagram
+    coach_profiles ||--o{ orders : buys
+    plans ||--o{ plan_features : features
+    plans ||--o{ orders : origin
+    orders ||--o{ order_features : snapshot
+    orders ||--o{ payment_attempts : attempts
+    orders ||--o| payments : payment
+    payment_attempts ||--o| payments : winning
+    orders ||--o| access_periods : period
+    coach_profiles ||--o{ access_periods : access
+    access_periods ||--o{ ai_usage_entries : usage
+</pre></div>
+<h2>دعوت و رابطه</h2>
+<div class="diagram"><pre class="mermaid">
+erDiagram
+    coach_profiles ||--o{ athlete_invitations : invites
+    coach_profiles ||--o{ coaching_relationships : coaches
+    athlete_profiles ||--o{ coaching_relationships : trains
+    athlete_invitations |o--o| coaching_relationships : accepts
+    coaching_relationships ||--o{ coaching_relationship_events : events
+</pre></div>
+<p>یک زوج مربی و ورزشکار فقط یک ردیف رابطه دارد. چند مربی برای یک ورزشکار چند ردیف با <code>coach_profile_id</code> متفاوت است.</p>
+<h2>تمرین تجویزی و عملکرد</h2>
+<div class="diagram"><pre class="mermaid">
+erDiagram
+    muscles ||--o{ exercise_muscles : targets
+    exercises ||--o{ exercise_muscles : muscles
+    exercises ||--o{ exercise_media : media
+    muscles }o--o{ body_model_areas : display
+    coach_profiles ||--o{ exercises : private
+    coach_profiles ||--o{ workout_programs : owns
+    workout_programs ||--o{ workout_program_versions : versions
+    workout_program_versions ||--o{ workout_days : days
+    workout_days ||--o{ workout_day_exercises : items
+    exercises ||--o{ workout_day_exercises : exercise
+    workout_program_versions ||--o{ workout_assignments : assigns
+    coaching_relationships ||--o{ workout_assignments : relationship
+    workout_assignments ||--o{ workout_sessions : context
+    coaching_relationships ||--o{ workout_sessions : scope
+    athlete_profiles ||--o{ workout_sessions : performs
+    workout_sessions ||--o{ workout_session_sets : sets
+    workout_day_exercises ||--o{ workout_session_sets : prescribed
+    workout_session_sets ||--o{ personal_record_events : record
+</pre></div>
+<h2>تغذیه</h2>
+<div class="diagram"><pre class="mermaid">
+erDiagram
+    coach_profiles ||--o{ foods : private
+    foods ||--o{ food_nutrient_revisions : basis
+    coach_profiles ||--o{ meal_plans : owns
+    meal_plans ||--o{ meal_plan_versions : versions
+    meal_plan_versions ||--o{ meal_days : days
+    meal_days ||--o{ meals : meals
+    meals ||--o{ meal_items : items
+    food_nutrient_revisions ||--o{ meal_items : snapshot
+    meal_plan_versions ||--o{ meal_assignments : assigns
+    coaching_relationships ||--o{ meal_assignments : relationship
+</pre></div>
+<h2>بدن، بازخورد و دستیار</h2>
+<div class="diagram"><pre class="mermaid">
+erDiagram
+    athlete_profiles ||--o{ body_observations : sessions
+    coaching_relationships ||--o{ body_observations : shared
+    body_observations ||--o{ body_observation_values : values
+    body_metric_definitions ||--o{ body_observation_values : unit
+    coaching_relationships ||--o{ feedback_threads : subject
+    feedback_threads ||--o{ feedback_messages : messages
+    coach_profiles ||--o{ coach_knowledge_documents : knowledge
+    coach_knowledge_documents ||--o{ coach_knowledge_chunks : chunks
+    coach_profiles ||--o{ ai_conversations : scope
+    coaching_relationships ||--o{ ai_conversations : context
+    ai_conversations ||--o{ ai_messages : turns
+    ai_conversations ||--o{ ai_generations : drafts
+    ai_generations |o--o| workout_program_versions : materialize
+    ai_generations |o--o| meal_plan_versions : materialize
+    access_periods ||--o{ ai_usage_entries : quota
+</pre></div></section><section class="appendix"><h1>پیوست ب. فرهنگ داده</h1><h2>طراحی دیتابیس</h2>
+<p>موتور هدف MySQL است. تست پیش‌فرض پروژه SQLite در حافظه است، پس کلید یکتای مشروط با ستون قابل‌تهیِ نگهداری‌شده توسط سرویس دامنه ساخته می‌شود، نه generated column مخصوص MySQL. چند مقدار NULL در ایندکس یکتا مجاز است.</p>
+<h2>۱. قراردادهای مشترک</h2>
+<table><thead><tr>
+<th>موضوع</th>
+<th>قرارداد</th>
+</tr></thead><tbody>
+<tr>
+<td>شناسه</td>
+<td><code>BIGINT UNSIGNED</code> خودکار</td>
+</tr>
+<tr>
+<td>زمان لحظه‌ای</td>
+<td><code>DATETIME</code> به UTC</td>
+</tr>
+<tr>
+<td>تاریخ مدنی</td>
+<td><code>DATE</code> به تقویم <code>Asia/Tehran</code></td>
+</tr>
+<tr>
+<td>پول</td>
+<td><code>BIGINT UNSIGNED</code> ریال، بدون اعشار</td>
+</tr>
+<tr>
+<td>وزن</td>
+<td>گرم، صحیح</td>
+</tr>
+<tr>
+<td>طول</td>
+<td>میلی‌متر، صحیح</td>
+</tr>
+<tr>
+<td>انرژی</td>
+<td>کیلوکالری صحیح</td>
+</tr>
+<tr>
+<td>درشت‌مغذی</td>
+<td>میلی‌گرم صحیح</td>
+</tr>
+<tr>
+<td>درصد</td>
+<td>basis point؛ ۱۸٫۲۵٪ برابر ۱۸۲۵</td>
+</tr>
+<tr>
+<td>BMI</td>
+<td>مقدار ضربدر ۱۰۰؛ ۲۳٫۴۵ برابر ۲۳۴۵</td>
+</tr>
+<tr>
+<td>تلفن</td>
+<td><code>CHAR(11)</code> به شکل <code>09xxxxxxxxx</code></td>
+</tr>
+<tr>
+<td>کد ملی</td>
+<td><code>CHAR(10)</code>؛ رقم کنترلی در برنامه بررسی می‌شود</td>
+</tr>
+<tr>
+<td>وضعیت</td>
+<td><code>VARCHAR(32)</code> با مجموعه بسته هر جدول</td>
+</tr>
+<tr>
+<td>حذف</td>
+<td>برای داده محصول <code>DELETE</code> مسیر عادی نیست</td>
+</tr>
+</tbody></table>
+<p>مقدار ناموجود ذخیره نمی‌شود. برای معیار مشاهده، نبودن ردیف یعنی ناموجود. صفر مقدار واقعی است و جای خالی را پر نمی‌کند.</p>
+<p>JSON فقط در دو جا استفاده می‌شود: <code>ai_generations.proposal</code> چون پیش‌نویس متغیر است و تا قبل از تبدیل به جدول‌های برنامه منبع حقیقت نیست؛ و <code>payment_attempts.gateway_payload</code> چون بدنه خام درگاه ساختار محصولی ندارد. ست، وعده، قیمت، قابلیت پلن و دسترسی JSON نیستند.</p>
+<p>زیرساخت Laravel که دامنه محصول نیست و حفظ می‌شود: <code>sessions</code>، <code>cache</code>، <code>cache_locks</code>، <code>jobs</code>، <code>job_batches</code>، <code>failed_jobs</code>. جدول <code>password_reset_tokens</code> محصول نیست و در F01 حذف می‌شود. <code>personal_access_tokens</code> را migration خود Sanctum می‌سازد.</p>
+<h2>۲. فهرست موجودیت‌ها</h2>
+<table><thead><tr>
+<th>دامنه</th>
+<th>جدول</th>
+<th>هدف</th>
+</tr></thead><tbody>
+<tr>
+<td>هویت</td>
+<td><code>users</code></td>
+<td>حساب شخص</td>
+</tr>
+<tr>
+<td>هویت</td>
+<td><code>signup_drafts</code></td>
+<td>ثبت‌نام ناتمام، قبل از وجود حساب</td>
+</tr>
+<tr>
+<td>هویت</td>
+<td><code>otp_challenges</code></td>
+<td>چالش یک‌بارمصرف شماره</td>
+</tr>
+<tr>
+<td>هویت</td>
+<td><code>platform_roles</code></td>
+<td>نقش مدیر پلتفرم</td>
+</tr>
+<tr>
+<td>هویت</td>
+<td><code>coach_profiles</code></td>
+<td>محدوده کاری مربی</td>
+</tr>
+<tr>
+<td>هویت</td>
+<td><code>athlete_profiles</code></td>
+<td>پنل ورزشکار</td>
+</tr>
+<tr>
+<td>تجاری</td>
+<td><code>plans</code></td>
+<td>تعریف قابل‌ویرایش پلن برای فروش آینده</td>
+</tr>
+<tr>
+<td>تجاری</td>
+<td><code>plan_features</code></td>
+<td>قابلیت‌های فعلی تعریف پلن</td>
+</tr>
+<tr>
+<td>تجاری</td>
+<td><code>orders</code></td>
+<td>سفارش و تصویر ثابت شرایط خرید</td>
+</tr>
+<tr>
+<td>تجاری</td>
+<td><code>order_features</code></td>
+<td>قابلیت‌های همان سفارش</td>
+</tr>
+<tr>
+<td>تجاری</td>
+<td><code>payment_attempts</code></td>
+<td>هر تلاش درگاه</td>
+</tr>
+<tr>
+<td>تجاری</td>
+<td><code>payments</code></td>
+<td>پول تأییدشده</td>
+</tr>
+<tr>
+<td>تجاری</td>
+<td><code>access_periods</code></td>
+<td>پنجره دسترسی و ظرفیت</td>
+</tr>
+<tr>
+<td>تجاری</td>
+<td><code>ai_usage_entries</code></td>
+<td>دفتر مصرف سهمیه AI</td>
+</tr>
+<tr>
+<td>رابطه</td>
+<td><code>athlete_invitations</code></td>
+<td>دعوت پیش از رابطه</td>
+</tr>
+<tr>
+<td>رابطه</td>
+<td><code>coaching_relationships</code></td>
+<td>رابطه یک مربی و یک ورزشکار</td>
+</tr>
+<tr>
+<td>رابطه</td>
+<td><code>coaching_relationship_events</code></td>
+<td>شروع، پایان و فعال‌سازی مجدد</td>
+</tr>
+<tr>
+<td>حرکت</td>
+<td><code>muscles</code></td>
+<td>عضله هدف حرکت</td>
+</tr>
+<tr>
+<td>حرکت</td>
+<td><code>body_model_areas</code></td>
+<td>ناحیه نمایش مدل بدن</td>
+</tr>
+<tr>
+<td>حرکت</td>
+<td><code>muscle_body_area</code></td>
+<td>نگاشت عضله به ناحیه نمایش</td>
+</tr>
+<tr>
+<td>حرکت</td>
+<td><code>exercises</code></td>
+<td>حرکت پلتفرم یا خصوصی مربی</td>
+</tr>
+<tr>
+<td>حرکت</td>
+<td><code>exercise_media</code></td>
+<td>رسانه حرکت</td>
+</tr>
+<tr>
+<td>حرکت</td>
+<td><code>exercise_muscles</code></td>
+<td>عضله‌های درگیر</td>
+</tr>
+<tr>
+<td>تمرین</td>
+<td><code>workout_programs</code></td>
+<td>هویت پایدار برنامه</td>
+</tr>
+<tr>
+<td>تمرین</td>
+<td><code>workout_program_versions</code></td>
+<td>نسخه تغییرناپذیر پس از انتشار</td>
+</tr>
+<tr>
+<td>تمرین</td>
+<td><code>workout_days</code></td>
+<td>روز یا بخش نسخه</td>
+</tr>
+<tr>
+<td>تمرین</td>
+<td><code>workout_day_exercises</code></td>
+<td>حرکت تجویزی</td>
+</tr>
+<tr>
+<td>تمرین</td>
+<td><code>workout_assignments</code></td>
+<td>تخصیص یک نسخه به یک رابطه</td>
+</tr>
+<tr>
+<td>عملکرد</td>
+<td><code>workout_sessions</code></td>
+<td>جلسه واقعاً انجام‌شده</td>
+</tr>
+<tr>
+<td>عملکرد</td>
+<td><code>workout_session_sets</code></td>
+<td>ست یا تلاش واقعی</td>
+</tr>
+<tr>
+<td>عملکرد</td>
+<td><code>personal_record_events</code></td>
+<td>رویداد شکسته‌شدن رکورد</td>
+</tr>
+<tr>
+<td>تغذیه</td>
+<td><code>foods</code></td>
+<td>هویت ماده غذایی</td>
+</tr>
+<tr>
+<td>تغذیه</td>
+<td><code>food_nutrient_revisions</code></td>
+<td>مبنای تغذیه‌ای تغییرناپذیر</td>
+</tr>
+<tr>
+<td>تغذیه</td>
+<td><code>meal_plans</code></td>
+<td>هویت برنامه غذا</td>
+</tr>
+<tr>
+<td>تغذیه</td>
+<td><code>meal_plan_versions</code></td>
+<td>نسخه برنامه غذا</td>
+</tr>
+<tr>
+<td>تغذیه</td>
+<td><code>meal_days</code></td>
+<td>روز نسخه</td>
+</tr>
+<tr>
+<td>تغذیه</td>
+<td><code>meals</code></td>
+<td>وعده</td>
+</tr>
+<tr>
+<td>تغذیه</td>
+<td><code>meal_items</code></td>
+<td>قلم وعده، وصل به revision</td>
+</tr>
+<tr>
+<td>تغذیه</td>
+<td><code>meal_assignments</code></td>
+<td>تخصیص نسخه غذا به رابطه</td>
+</tr>
+<tr>
+<td>بدن</td>
+<td><code>body_metric_definitions</code></td>
+<td>واژگان معیار و واحد</td>
+</tr>
+<tr>
+<td>بدن</td>
+<td><code>body_observations</code></td>
+<td>یک نوبت ثبت آنالیز</td>
+</tr>
+<tr>
+<td>بدن</td>
+<td><code>body_observation_values</code></td>
+<td>معیارهایی که واقعاً مقدار دارند</td>
+</tr>
+<tr>
+<td>بازخورد</td>
+<td><code>feedback_threads</code></td>
+<td>موضوع بازخورد داخل رابطه</td>
+</tr>
+<tr>
+<td>بازخورد</td>
+<td><code>feedback_messages</code></td>
+<td>پیام مشترک یا یادداشت داخلی</td>
+</tr>
+<tr>
+<td>اعلان</td>
+<td><code>notifications</code></td>
+<td>اعلان درون‌برنامه‌ای</td>
+</tr>
+<tr>
+<td>AI</td>
+<td><code>coach_ai_setting_versions</code></td>
+<td>روش و قواعد نسخه‌دار مربی</td>
+</tr>
+<tr>
+<td>AI</td>
+<td><code>coach_knowledge_documents</code></td>
+<td>سند دانش مربی</td>
+</tr>
+<tr>
+<td>AI</td>
+<td><code>coach_knowledge_chunks</code></td>
+<td>قطعه قابل بازیابی همان مربی</td>
+</tr>
+<tr>
+<td>AI</td>
+<td><code>ai_conversations</code></td>
+<td>گفتگو</td>
+</tr>
+<tr>
+<td>AI</td>
+<td><code>ai_messages</code></td>
+<td>نوبت گفتگو یا نتیجه ابزار</td>
+</tr>
+<tr>
+<td>AI</td>
+<td><code>ai_generations</code></td>
+<td>پیشنهاد ساختاریافته قبل از انتشار</td>
+</tr>
+</tbody></table>
+<p><code>coach_profiles</code> ستون‌های <code>current_ai_setting_version_id</code> و <code>ai_onboarding_completed_at</code> را هم نگه می‌دارد تا جدول یک‌به‌یک جدا ساخته نشود.</p>
+<h2>۳. هویت</h2>
+<h3><code>users</code></h3>
+<p>حساب شخص. ایمیل و رمز محصول نیستند.</p>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>CHAR(11)</td>
+<td>نه</td>
+<td></td>
+<td>UNIQUE</td>
+</tr>
+<tr>
+<td><code>national_code</code></td>
+<td>CHAR(10)</td>
+<td>نه</td>
+<td></td>
+<td>UNIQUE</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>active</code></td>
+<td><code>active</code> یا <code>suspended</code></td>
+</tr>
+<tr>
+<td><code>suspended_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>last_login_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>حذف فیزیکی کاربر در نسخه اولیه نیست. تعلیق فقط <code>status</code> را عوض می‌کند.</p>
+<h3><code>signup_drafts</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>CHAR(11)</td>
+<td>نه</td>
+<td></td>
+<td>ایندکس</td>
+</tr>
+<tr>
+<td><code>phone_verified_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>national_code</code></td>
+<td>CHAR(10)</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>display_name</code></td>
+<td>VARCHAR(120)</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>panel</code></td>
+<td>VARCHAR(32)</td>
+<td>بله</td>
+<td></td>
+<td><code>coach</code>، <code>athlete</code>، <code>both</code></td>
+</tr>
+<tr>
+<td><code>open_phone</code></td>
+<td>CHAR(11)</td>
+<td>بله</td>
+<td></td>
+<td>UNIQUE؛ تا قبل از مصرف برابر <code>phone</code></td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>consumed_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>FK به <code>users</code>، RESTRICT</td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>با مصرف پیش‌نویس، <code>open_phone</code> در همان UPDATE برابر NULL می‌شود.</p>
+<h3><code>otp_challenges</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>CHAR(11)</td>
+<td>نه</td>
+<td></td>
+<td>ایندکس <code>(phone, purpose, consumed_at)</code></td>
+</tr>
+<tr>
+<td><code>purpose</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td></td>
+<td><code>signup</code>، <code>login</code>، <code>invitation</code></td>
+</tr>
+<tr>
+<td><code>code_hash</code></td>
+<td>CHAR(64)</td>
+<td>نه</td>
+<td></td>
+<td>متن کد ذخیره نمی‌شود</td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>attempt_count</code></td>
+<td>TINYINT UNSIGNED</td>
+<td>نه</td>
+<td>۰</td>
+<td></td>
+</tr>
+<tr>
+<td><code>consumed_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>signup_draft_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>athlete_invitation_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>پیشنهاد اجرایی: اعتبار ۱۲۰ ثانیه و حداکثر ۵ تلاش غلط. کد <code>12345</code> فقط وقتی <code>APP_ENV=local</code> است پذیرفته می‌شود و در production وجودش خطای راه‌اندازی است.</p>
+<h3><code>platform_roles</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td></td>
+<td>مقدار نسخه اولیه: <code>platform_admin</code></td>
+</tr>
+<tr>
+<td><code>granted_by_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>UNIQUE <code>(user_id, role)</code>.</p>
+<h3><code>coach_profiles</code></h3>
+<p>مرز مالکیت داده مربی.</p>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>UNIQUE، FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>display_name</code></td>
+<td>VARCHAR(120)</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>active</code></td>
+<td><code>active</code> یا <code>archived</code></td>
+</tr>
+<tr>
+<td><code>current_ai_setting_version_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>ai_onboarding_completed_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3><code>athlete_profiles</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>UNIQUE، FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>display_name</code></td>
+<td>VARCHAR(120)</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>active</code></td>
+<td><code>active</code> یا <code>archived</code></td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>جنسیت و تاریخ تولد خواسته نشده‌اند و ستون ندارند.</p>
+<h2>۴. تجارت</h2>
+<p>کلید قابلیت‌های نسخه اولیه: <code>workout_programs</code>، <code>nutrition_programs</code>، <code>body_analysis</code>، <code>ai_coach_assistant</code>، <code>ai_athlete_access</code>، <code>progress_reports</code>. بودن کلید در پلن داده است؛ فهرست کلیدهای شناخته‌شده در کد بسته است تا غلط املایی قابلیت جدید نسازد.</p>
+<h3><code>plans</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td>VARCHAR(64)</td>
+<td>نه</td>
+<td></td>
+<td>UNIQUE</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>VARCHAR(160)</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>TEXT</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>price_irr</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>billing_interval_unit</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td></td>
+<td><code>day</code> یا <code>month</code></td>
+</tr>
+<tr>
+<td><code>billing_interval_count</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>بزرگ‌تر از صفر</td>
+</tr>
+<tr>
+<td><code>athlete_capacity</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>ai_request_quota</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>اگر قابلیت AI هست، در برنامه اجباری و بزرگ‌تر از صفر</td>
+</tr>
+<tr>
+<td><code>is_sellable</code></td>
+<td>BOOLEAN</td>
+<td>نه</td>
+<td>false</td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ویرایش این جدول فقط فروش بعدی را عوض می‌کند. سفارش پرداخت‌شده تصویر خودش را دارد. پلن فروخته‌شده حذف نمی‌شود؛ فروشش با <code>is_sellable</code> بسته می‌شود.</p>
+<h3><code>plan_features</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>plan_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، CASCADE فقط برای پلن هرگز سفارش‌نشده</td>
+</tr>
+<tr>
+<td><code>feature_key</code></td>
+<td>VARCHAR(64)</td>
+<td>نه</td>
+<td>UNIQUE همراه <code>plan_id</code></td>
+</tr>
+</tbody></table>
+<h3><code>orders</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>plan_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>pending</code></td>
+<td><code>pending</code>، <code>paid</code>، <code>expired</code>، <code>cancelled</code></td>
+</tr>
+<tr>
+<td><code>price_irr</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>تصویر قیمت</td>
+</tr>
+<tr>
+<td><code>billing_interval_unit</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td></td>
+<td>تصویر</td>
+</tr>
+<tr>
+<td><code>billing_interval_count</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>تصویر</td>
+</tr>
+<tr>
+<td><code>athlete_capacity</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>تصویر</td>
+</tr>
+<tr>
+<td><code>ai_request_quota</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>تصویر</td>
+</tr>
+<tr>
+<td><code>open_checkout_coach_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>UNIQUE؛ در وضعیت <code>pending</code> برابر مربی</td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td>مهلت پرداخت سفارش باز</td>
+</tr>
+<tr>
+<td><code>paid_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>cancelled_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_by_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ایندکس <code>(coach_profile_id, status)</code>. پس از <code>paid</code> ستون‌های تصویر تغییر نمی‌کنند.</p>
+<h3><code>order_features</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>order_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>feature_key</code></td>
+<td>VARCHAR(64)</td>
+<td>نه</td>
+<td>UNIQUE همراه <code>order_id</code></td>
+</tr>
+</tbody></table>
+<h3><code>payment_attempts</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>order_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>FK، RESTRICT، ایندکس</td>
+</tr>
+<tr>
+<td><code>gateway</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>amount_irr</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>باید با سفارش برابر باشد</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>initiated</code></td>
+<td><code>initiated</code>، <code>succeeded</code>، <code>failed</code></td>
+</tr>
+<tr>
+<td><code>idempotency_key</code></td>
+<td>CHAR(64)</td>
+<td>نه</td>
+<td></td>
+<td>UNIQUE</td>
+</tr>
+<tr>
+<td><code>gateway_request_id</code></td>
+<td>VARCHAR(191)</td>
+<td>بله</td>
+<td></td>
+<td>UNIQUE</td>
+</tr>
+<tr>
+<td><code>gateway_reference</code></td>
+<td>VARCHAR(191)</td>
+<td>بله</td>
+<td></td>
+<td>UNIQUE</td>
+</tr>
+<tr>
+<td><code>failure_code</code></td>
+<td>VARCHAR(64)</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>gateway_payload</code></td>
+<td>JSON</td>
+<td>بله</td>
+<td></td>
+<td>بدنه خام؛ منبع حقیقت تجاری نیست</td>
+</tr>
+<tr>
+<td><code>finished_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><code>gateway = manual</code> فقط برای پرداخت ثبت‌شده توسط مدیر پلتفرم است و همان مسیر فعال‌سازی را طی می‌کند.</p>
+<h3><code>payments</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>order_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>UNIQUE، FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>payment_attempt_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>UNIQUE، FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>amount_irr</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>gateway</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>gateway_reference</code></td>
+<td>VARCHAR(191)</td>
+<td>نه</td>
+<td>UNIQUE</td>
+</tr>
+<tr>
+<td><code>confirmed_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>هر سفارش حداکثر یک پرداخت تأییدشده دارد. تکرار callback به این UNIQUE برخورد می‌کند و دوره دوم نمی‌سازد.</p>
+<h3><code>access_periods</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>order_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>UNIQUE، FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td></td>
+<td><code>scheduled</code>، <code>active</code>، <code>expired</code>، <code>revoked</code></td>
+</tr>
+<tr>
+<td><code>starts_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>ends_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td>بزرگ‌تر از شروع</td>
+</tr>
+<tr>
+<td><code>athlete_capacity</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>ai_request_quota</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>ai_requests_used</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td>۰</td>
+<td></td>
+</tr>
+<tr>
+<td><code>active_coach_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>UNIQUE؛ فقط در وضعیت <code>active</code> پر است</td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ایندکس <code>(coach_profile_id, status, ends_at)</code>.</p>
+<p>کنترل ظرفیت و سهمیه روی همین ردیف <code>lockForUpdate</code> می‌شود. افزایش <code>ai_requests_used</code> و درج <code>ai_usage_entries</code> یک تراکنش است. اگر سهمیه کافی نباشد هیچ‌کدام نوشته نمی‌شود.</p>
+<h3><code>ai_usage_entries</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>access_period_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>actor_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>athlete_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>coaching_relationship_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>ai_generation_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td></td>
+<td>مانند <code>coach_turn</code> یا <code>athlete_turn</code></td>
+</tr>
+<tr>
+<td><code>units</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td>۱</td>
+<td></td>
+</tr>
+<tr>
+<td><code>provider_prompt_tokens</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>فقط مشاهده هزینه</td>
+</tr>
+<tr>
+<td><code>provider_completion_tokens</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ایندکس <code>(access_period_id, created_at)</code>.</p>
+<h2>۵. رابطه</h2>
+<h3><code>athlete_invitations</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>CHAR(11)</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>pending</code></td>
+<td><code>pending</code>، <code>accepted</code>، <code>expired</code>، <code>revoked</code>، <code>declined</code></td>
+</tr>
+<tr>
+<td><code>pending_key</code></td>
+<td>VARCHAR(32)</td>
+<td>بله</td>
+<td></td>
+<td>UNIQUE؛ <code>{coachProfileId}:{phone}</code> فقط وقتی <code>pending</code></td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td>پیشنهاد: ۷ روز</td>
+</tr>
+<tr>
+<td><code>accepted_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>revoked_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>accepted_by_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>coaching_relationship_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>created_by_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ایندکس <code>(phone, status)</code> و <code>(coach_profile_id, status)</code>.</p>
+<h3><code>coaching_relationships</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>athlete_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>active</code> یا <code>ended</code></td>
+</tr>
+<tr>
+<td><code>started_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ended_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ended_by_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>end_reason</code></td>
+<td>VARCHAR(160)</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>UNIQUE <code>(coach_profile_id, athlete_profile_id)</code>. ایندکس هر دو طرف با <code>status</code>.</p>
+<p>برابری مالک دو پروفایل در دیتابیس به‌سادگی قابل بیان نیست و در تراکنش پذیرش رد می‌شود.</p>
+<h3><code>coaching_relationship_events</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coaching_relationship_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>event_type</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>started</code>، <code>ended</code>، <code>reactivated</code></td>
+</tr>
+<tr>
+<td><code>actor_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>happened_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>note</code></td>
+<td>VARCHAR(160)</td>
+<td>بله</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>این جدول append-only است.</p>
+<h2>۶. حرکت و برنامه تمرین</h2>
+<h3><code>muscles</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td>VARCHAR(64)</td>
+<td>نه</td>
+<td>UNIQUE</td>
+</tr>
+<tr>
+<td><code>name_fa</code></td>
+<td>VARCHAR(120)</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>name_en</code></td>
+<td>VARCHAR(120)</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>parent_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK به همین جدول، RESTRICT</td>
+</tr>
+</tbody></table>
+<h3><code>body_model_areas</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td>VARCHAR(64)</td>
+<td>نه</td>
+<td>UNIQUE؛ قرارداد فرانت‌اند</td>
+</tr>
+<tr>
+<td><code>name_fa</code></td>
+<td>VARCHAR(120)</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>name_en</code></td>
+<td>VARCHAR(120)</td>
+<td>بله</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3><code>muscle_body_area</code></h3>
+<p>PK مرکب <code>(muscle_id, body_model_area_id)</code>، هر دو FK و RESTRICT. این نگاشت فقط نمایش است و اندازه‌گیری بدن نیست.</p>
+<h3><code>exercises</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>پیش‌فرض</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>خودکار</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>NULL یعنی کاتالوگ پلتفرم؛ FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>VARCHAR(160)</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>instructions</code></td>
+<td>TEXT</td>
+<td>بله</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>tracking_type</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td></td>
+<td><code>weight_reps</code>، <code>reps</code>، <code>duration</code>، <code>distance</code></td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>active</code></td>
+<td><code>active</code> یا <code>archived</code></td>
+</tr>
+<tr>
+<td><code>created_by_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ایندکس <code>(coach_profile_id, status)</code>. حرکت استفاده‌شده در نسخه منتشرشده حذف نمی‌شود.</p>
+<h3><code>exercise_media</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>exercise_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>media_type</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td><code>image</code> یا <code>video</code></td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>VARCHAR(255)</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sort_order</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3><code>exercise_muscles</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>exercise_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>muscle_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>involvement</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td><code>primary</code> یا <code>secondary</code></td>
+</tr>
+</tbody></table>
+<p>UNIQUE <code>(exercise_id, muscle_id)</code>.</p>
+<h3><code>workout_programs</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>VARCHAR(160)</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>draft</code>، <code>published</code>، <code>archived</code></td>
+</tr>
+<tr>
+<td><code>current_version_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK به نسخه، RESTRICT</td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3><code>workout_program_versions</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>workout_program_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>version_number</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td>UNIQUE همراه برنامه</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>draft</code> یا <code>published</code></td>
+</tr>
+<tr>
+<td><code>note</code></td>
+<td>TEXT</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>published_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_by_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>نسخه <code>published</code> و فرزندانش UPDATE نمی‌شوند. ویرایش یعنی نسخه <code>draft</code> بعدی. انتشار، <code>published_at</code> را پر می‌کند و نوشتن بعدی را در سرویس ممنوع می‌کند.</p>
+<h3><code>workout_days</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>workout_program_version_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>نه</td>
+<td>UNIQUE همراه نسخه</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>VARCHAR(120)</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3><code>workout_day_exercises</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>workout_day_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>exercise_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>نه</td>
+<td>UNIQUE همراه روز</td>
+</tr>
+<tr>
+<td><code>tracking_type</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td>می‌تواند با پیش‌فرض حرکت فرق کند</td>
+</tr>
+<tr>
+<td><code>prescribed_sets</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>reps_min</code> / <code>reps_max</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>target_weight_g</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>rest_seconds</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>duration_seconds</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>distance_m</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>coach_note</code></td>
+<td>VARCHAR(500)</td>
+<td>بله</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>برای <code>weight_reps</code> وزن هدف اختیاری است. برای <code>duration</code> فقط مدت معنی دارد. سرویس ستون بی‌ربط را نمی‌نویسد.</p>
+<h3><code>workout_assignments</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coaching_relationship_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>athlete_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT؛ باید مالک رابطه باشد</td>
+</tr>
+<tr>
+<td><code>workout_program_version_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT؛ فقط نسخه published</td>
+</tr>
+<tr>
+<td><code>assigned_by_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>starts_on</code></td>
+<td>DATE</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ends_on</code></td>
+<td>DATE</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>active</code> یا <code>ended</code></td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ایندکس <code>(athlete_profile_id, status)</code> و <code>(coaching_relationship_id, status)</code>.</p>
+<p>تخصیص به نسخه وصل است. نسخه جدید به‌خودخود تخصیص قدیمی را جابه‌جا نمی‌کند.</p>
+<h2>۷. عملکرد</h2>
+<h3><code>workout_sessions</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>athlete_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>coaching_relationship_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT؛ فقط رابطه فعال در لحظه شروع</td>
+</tr>
+<tr>
+<td><code>workout_assignment_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>workout_day_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>performed_on</code></td>
+<td>DATE</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>started_at</code> / <code>completed_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>in_progress</code> یا <code>completed</code></td>
+</tr>
+<tr>
+<td><code>perceived_effort</code></td>
+<td>TINYINT UNSIGNED</td>
+<td>بله</td>
+<td>۱ تا ۱۰، اگر ورزشکار بدهد</td>
+</tr>
+<tr>
+<td><code>athlete_note</code></td>
+<td>VARCHAR(500)</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ایندکس <code>(athlete_profile_id, performed_on)</code> و <code>(coaching_relationship_id, performed_on)</code>.</p>
+<h3><code>workout_session_sets</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>workout_session_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>sequence_no</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>نه</td>
+<td>UNIQUE همراه جلسه</td>
+</tr>
+<tr>
+<td><code>workout_day_exercise_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>exercise_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT؛ کپی شناسه در زمان ثبت</td>
+</tr>
+<tr>
+<td><code>set_index</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>نه</td>
+<td>ترتیب داخل همان حرکت جلسه</td>
+</tr>
+<tr>
+<td><code>reps</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>weight_g</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>duration_seconds</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>distance_m</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>is_completed</code></td>
+<td>BOOLEAN</td>
+<td>نه</td>
+<td>پیش‌فرض true</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><code>sequence_no</code> یکتا بودن را حتی وقتی قلم تجویزی تهی است حفظ می‌کند. ست تکمیل‌نشده رکورد نمی‌سازد.</p>
+<h3><code>personal_record_events</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>athlete_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>exercise_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>coaching_relationship_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>metric</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>max_weight_g</code>، <code>max_duration_s</code>، <code>max_distance_m</code>، <code>estimated_1rm_g</code></td>
+</tr>
+<tr>
+<td><code>value_int</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>workout_session_set_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>formula_code</code></td>
+<td>VARCHAR(32)</td>
+<td>بله</td>
+<td>برای یک‌تکرار بیشینه: <code>epley_v1</code></td>
+</tr>
+<tr>
+<td><code>recorded_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ایندکس <code>(athlete_profile_id, exercise_id, metric, recorded_at)</code>. درج فقط وقتی مقدار از بیشینه قبلی همان ورزشکار و حرکت و معیار بیشتر باشد. رویدادها UPDATE نمی‌شوند.</p>
+<p><code>epley_v1</code>: گرم ضربدر <code>(۱ + تکرار / ۳۰)</code> با گرد کردن half-up، فقط برای تکرار ۱ تا ۱۰.</p>
+<h2>۸. تغذیه</h2>
+<h3><code>foods</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>NULL یعنی کاتالوگ پلتفرم</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>VARCHAR(160)</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>active</code> یا <code>archived</code></td>
+</tr>
+<tr>
+<td><code>current_revision_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3><code>food_nutrient_revisions</code></h3>
+<p>تغییرناپذیر. ویرایش غذا ردیف جدید است و <code>current_revision_id</code> را جلو می‌برد.</p>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>food_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>revision_number</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td>UNIQUE همراه غذا</td>
+</tr>
+<tr>
+<td><code>basis</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td><code>per_100g</code> یا <code>per_unit</code></td>
+</tr>
+<tr>
+<td><code>unit_code</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td><code>g</code>، <code>ml</code>، <code>piece</code></td>
+</tr>
+<tr>
+<td><code>unit_label</code></td>
+<td>VARCHAR(40)</td>
+<td>نه</td>
+<td>برچسب نمایش</td>
+</tr>
+<tr>
+<td><code>grams_per_unit</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td>برای تبدیل واحد به گرم، وقتی واحد گرم نیست</td>
+</tr>
+<tr>
+<td><code>energy_kcal</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td>مقدار همان مبنا</td>
+</tr>
+<tr>
+<td><code>protein_mg</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>carbohydrate_mg</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>fat_mg</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>برای <code>per_100g</code> واحد <code>g</code> است. برای <code>per_unit</code> مقدارها متعلق به یک واحد است.</p>
+<p>محاسبه قلم: ضریبِ هر ۱۰۰ گرم برابر <code>quantity_g / 100</code> و ضریب واحد برابر <code>quantity_unit_milli / 1000</code> است. حاصل هر درشت‌مغذی با half-up و حساب صحیح محاسبه می‌شود: <code>(مقدار × عدد مبنا + مقسوم‌علیه / ۲) / مقسوم‌علیه</code>.</p>
+<h3><code>meal_plans</code> و <code>meal_plan_versions</code></h3>
+<p>ساختار و قفل انتشار مانند برنامه تمرین است. ستون‌ها: عنوان و وضعیت روی برنامه؛ شماره نسخه، <code>state</code>، <code>published_at</code> و سازنده روی نسخه. UNIQUE <code>(meal_plan_id, version_number)</code>.</p>
+<h3><code>meal_days</code></h3>
+<p><code>meal_plan_version_id</code>، <code>position</code> یکتا در نسخه، <code>title</code>.</p>
+<h3><code>meals</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>meal_day_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>نه</td>
+<td>UNIQUE همراه روز</td>
+</tr>
+<tr>
+<td><code>meal_type</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td><code>breakfast</code>، <code>lunch</code>، <code>dinner</code>، <code>snack</code>، <code>other</code></td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>VARCHAR(120)</td>
+<td>بله</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3><code>meal_items</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>meal_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td>SMALLINT UNSIGNED</td>
+<td>نه</td>
+<td>UNIQUE همراه وعده</td>
+</tr>
+<tr>
+<td><code>food_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>food_nutrient_revision_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>quantity_g</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td>فقط مبنای <code>per_100g</code></td>
+</tr>
+<tr>
+<td><code>quantity_unit_milli</code></td>
+<td>INT UNSIGNED</td>
+<td>بله</td>
+<td>۱۵۰۰ یعنی ۱٫۵ واحد</td>
+</tr>
+</tbody></table>
+<p>دقیقاً یکی از دو ستون مقدار، مطابق <code>basis</code> همان revision، پر می‌شود. جمع ذخیره‌شده جداگانه ندارد تا از revision منحرف نشود.</p>
+<h3><code>meal_assignments</code></h3>
+<p>همان شکل <code>workout_assignments</code> با <code>meal_plan_version_id</code>.</p>
+<h2>۹. بدن</h2>
+<h3><code>body_metric_definitions</code></h3>
+<p>داده واژگانی، نه جدول گزارش.</p>
+<table><thead><tr>
+<th>کد</th>
+<th>واحد ذخیره‌سازی</th>
+<th>مشتق</th>
+</tr></thead><tbody>
+<tr>
+<td><code>weight_g</code></td>
+<td>گرم</td>
+<td>نه</td>
+</tr>
+<tr>
+<td><code>height_mm</code></td>
+<td>میلی‌متر</td>
+<td>نه</td>
+</tr>
+<tr>
+<td><code>body_fat_bp</code></td>
+<td>basis point</td>
+<td>نه</td>
+</tr>
+<tr>
+<td><code>muscle_mass_g</code></td>
+<td>گرم</td>
+<td>نه</td>
+</tr>
+<tr>
+<td><code>body_water_bp</code></td>
+<td>basis point</td>
+<td>نه</td>
+</tr>
+<tr>
+<td><code>visceral_fat_score</code></td>
+<td>امتیاز صحیح دستگاه</td>
+<td>نه</td>
+</tr>
+<tr>
+<td><code>bmi_centi</code></td>
+<td>BMI ضربدر ۱۰۰</td>
+<td>می‌تواند measured یا calculated باشد</td>
+</tr>
+<tr>
+<td><code>neck_mm</code>، <code>chest_mm</code>، <code>waist_mm</code>، <code>hip_mm</code></td>
+<td>میلی‌متر</td>
+<td>نه</td>
+</tr>
+<tr>
+<td><code>left_arm_mm</code>، <code>right_arm_mm</code>، <code>left_thigh_mm</code>، <code>right_thigh_mm</code></td>
+<td>میلی‌متر</td>
+<td>نه</td>
+</tr>
+</tbody></table>
+<p>ستون‌ها: <code>code</code> به‌عنوان PK، <code>name_fa</code>، <code>unit_code</code>، <code>is_derived</code>. محیط دور قابل گسترش است، ولی هر کد جدید ردیف واژگان است نه ستون جدید مشاهده.</p>
+<h3><code>body_observations</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>athlete_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>coaching_relationship_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>recorded_by_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td><code>manual</code>، <code>device</code>، <code>coach</code></td>
+</tr>
+<tr>
+<td><code>visibility</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>athlete_private</code> یا <code>relationship</code></td>
+</tr>
+<tr>
+<td><code>measured_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td>زمان اندازه‌گیری، نه زمان درج</td>
+</tr>
+<tr>
+<td><code>note</code></td>
+<td>VARCHAR(500)</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ایندکس <code>(athlete_profile_id, measured_at)</code>.</p>
+<p>اگر <code>visibility = relationship</code> باشد شناسه رابطه اجباری است. مربی دیگر این ردیف را نمی‌بیند. مشاهده خصوصی شناسه رابطه ندارد.</p>
+<h3><code>body_observation_values</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>body_observation_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>metric_code</code></td>
+<td>VARCHAR(64)</td>
+<td>نه</td>
+<td>FK به تعریف معیار</td>
+</tr>
+<tr>
+<td><code>value_int</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td>بزرگ‌تر از صفر برای وزن و طول</td>
+</tr>
+<tr>
+<td><code>origin</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td><code>measured</code> یا <code>calculated</code></td>
+</tr>
+<tr>
+<td><code>formula_code</code></td>
+<td>VARCHAR(32)</td>
+<td>بله</td>
+<td>برای BMI محاسبه‌شده <code>bmi_v1</code></td>
+</tr>
+</tbody></table>
+<p>UNIQUE <code>(body_observation_id, metric_code, origin)</code> تا BMI دستگاه و BMI محاسبه‌شده هم‌زمان بمانند. معیاری که اندازه گرفته نشده ردیف ندارد.</p>
+<p>Before/After دو مشاهده را مقایسه می‌کند و جدول عکس یا نتیجه مقایسه‌ای ندارد.</p>
+<h2>۱۰. بازخورد و اعلان</h2>
+<h3><code>feedback_threads</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coaching_relationship_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>opened_by_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>workout_session_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>workout_day_exercise_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>exercise_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td><code>open</code> یا <code>resolved</code></td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>حداکثر یکی از سه شناسه موضوع پر است. اگر هیچ‌کدام پر نباشد موضوع عمومی همان رابطه است. موضوع باید به همان رابطه قابل انتساب باشد. این قاعده در برنامه بررسی می‌شود، چون CHECK چندجدولی در MySQL عملی نیست.</p>
+<h3><code>feedback_messages</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>feedback_thread_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>author_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>visibility</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td><code>shared</code> یا <code>coach_only</code></td>
+</tr>
+<tr>
+<td><code>body</code></td>
+<td>TEXT</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>pain_level</code></td>
+<td>TINYINT UNSIGNED</td>
+<td>بله</td>
+<td>۰ تا ۱۰</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ورزشکار فقط <code>shared</code> می‌نویسد و فقط <code>shared</code> می‌خواند. <code>coach_only</code> یادداشت داخلی است، نه پیام گفتگو.</p>
+<h3><code>notifications</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>VARCHAR(64)</td>
+<td>نه</td>
+<td><code>program_assigned</code>، <code>record_achieved</code>، <code>body_observation_recorded</code>، <code>feedback_replied</code></td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>VARCHAR(160)</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>body</code></td>
+<td>VARCHAR(500)</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>subject_type</code></td>
+<td>VARCHAR(64)</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>subject_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>بدون FK به دلیل موضوع‌های متفاوت</td>
+</tr>
+<tr>
+<td><code>read_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ایندکس <code>(user_id, read_at, id)</code>. اعلان push و وب‌سوکت جدول دیگری نمی‌خواهد.</p>
+<h2>۱۱. هوش مصنوعی</h2>
+<h3><code>coach_ai_setting_versions</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>version_number</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td>UNIQUE همراه مربی</td>
+</tr>
+<tr>
+<td><code>methodology</code></td>
+<td>TEXT</td>
+<td>نه</td>
+<td>روش برنامه‌نویسی مربی</td>
+</tr>
+<tr>
+<td><code>preferences</code></td>
+<td>TEXT</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>constraints</code></td>
+<td>TEXT</td>
+<td>نه</td>
+<td>محدودیت‌های کاری</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ردیف منتشرشده تغییر نمی‌کند. گفتگو به شناسه نسخه وصل است. تکمیل اولین نسخه، <code>ai_onboarding_completed_at</code> مربی را پر می‌کند.</p>
+<h3><code>coach_knowledge_documents</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>VARCHAR(160)</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>storage_path</code></td>
+<td>VARCHAR(255)</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sha256</code></td>
+<td>CHAR(64)</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>uploaded</code>، <code>ready</code>، <code>rejected</code></td>
+</tr>
+<tr>
+<td><code>created_by_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>created_at</code> / <code>updated_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>UNIQUE <code>(coach_profile_id, sha256)</code>.</p>
+<h3><code>coach_knowledge_chunks</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coach_knowledge_document_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT؛ تکرار عمدی برای فیلتر اجباری</td>
+</tr>
+<tr>
+<td><code>chunk_index</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td>UNIQUE همراه سند</td>
+</tr>
+<tr>
+<td><code>body</code></td>
+<td>TEXT</td>
+<td>نه</td>
+<td>ایندکس FULLTEXT در MySQL</td>
+</tr>
+</tbody></table>
+<p>ابزار بازیابی اگر <code>coach_profile_id</code> ندهد نتیجه خالی برمی‌گرداند. FULLTEXT در SQLite تست نمی‌شود؛ آزمایش آن یا MySQL است یا پشت درگاهی که در تست جایگزین می‌شود.</p>
+<p>متن سند داده است و اجازه ابزار یا تغییر مربی نمی‌دهد.</p>
+<h3><code>ai_conversations</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>coaching_relationship_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>athlete_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>actor_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>audience</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td><code>coach</code> یا <code>athlete</code></td>
+</tr>
+<tr>
+<td><code>coach_ai_setting_version_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>گفتگوی ورزشکار فقط وقتی قابلیت <code>ai_athlete_access</code> روی دوره فعال مربی همان رابطه باشد ساخته می‌شود.</p>
+<h3><code>ai_messages</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>ai_conversation_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>sequence_no</code></td>
+<td>INT UNSIGNED</td>
+<td>نه</td>
+<td>UNIQUE همراه گفتگو</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>VARCHAR(16)</td>
+<td>نه</td>
+<td><code>user</code>، <code>assistant</code>، <code>tool</code></td>
+</tr>
+<tr>
+<td><code>body</code></td>
+<td>TEXT</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>tool_name</code></td>
+<td>VARCHAR(64)</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>ابزارهای مجاز نسخه اولیه: <code>relationship_summary</code>، <code>workout_history</code>، <code>personal_records</code>، <code>body_series</code>، <code>shared_feedback</code>، <code>coach_method</code>، <code>knowledge_search</code>. هر ابزار شناسه مربی و، در صورت وجود، شناسه رابطه را از زمینه سرور می‌گیرد، نه از متن کاربر.</p>
+<h3><code>ai_generations</code></h3>
+<table><thead><tr>
+<th>ستون</th>
+<th>نوع</th>
+<th>تهی</th>
+<th>قید</th>
+</tr></thead><tbody>
+<tr>
+<td><code>id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>PK</td>
+</tr>
+<tr>
+<td><code>coach_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>coaching_relationship_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>athlete_profile_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>ai_conversation_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>coach_ai_setting_version_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>نه</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>workout_program</code>، <code>meal_plan</code>، <code>progress_review</code></td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>VARCHAR(32)</td>
+<td>نه</td>
+<td><code>draft</code>، <code>approved</code>، <code>rejected</code>، <code>materialized</code></td>
+</tr>
+<tr>
+<td><code>proposal</code></td>
+<td>JSON</td>
+<td>نه</td>
+<td>پیش‌نویس؛ پس از materialize منبع حقیقت نیست</td>
+</tr>
+<tr>
+<td><code>model_name</code></td>
+<td>VARCHAR(120)</td>
+<td>نه</td>
+<td></td>
+</tr>
+<tr>
+<td><code>reviewed_by_user_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK، RESTRICT</td>
+</tr>
+<tr>
+<td><code>reviewed_at</code></td>
+<td>DATETIME</td>
+<td>بله</td>
+<td></td>
+</tr>
+<tr>
+<td><code>workout_program_version_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK نسخه ساخته‌شده</td>
+</tr>
+<tr>
+<td><code>meal_plan_version_id</code></td>
+<td>BIGINT UNSIGNED</td>
+<td>بله</td>
+<td>FK نسخه ساخته‌شده</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>DATETIME</td>
+<td>نه</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>تأیید مربی، ردیف‌های عادی نسخه برنامه را می‌سازد و شناسه آن‌ها را اینجا ثبت می‌کند. تخصیص به ورزشکار بعد از ساخته شدن نسخه و با همان قواعد دامنه تمرین است.</p>
+<h2>۱۲. مالکیت و دسترسی</h2>
+<table><thead><tr>
+<th>داده</th>
+<th>مالک محدوده</th>
+<th>چه کسی می‌خواند</th>
+</tr></thead><tbody>
+<tr>
+<td>کاربر و پروفایل خودش</td>
+<td>شخص</td>
+<td>خودش؛ مدیر فقط برای وضعیت حساب</td>
+</tr>
+<tr>
+<td>پلن و سفارش و پرداخت</td>
+<td>پروفایل مربی</td>
+<td>همان مربی و مدیر پلتفرم</td>
+</tr>
+<tr>
+<td>دعوت و رابطه</td>
+<td>پروفایل مربی</td>
+<td>مربی همان رابطه و ورزشکار همان رابطه</td>
+</tr>
+<tr>
+<td>حرکت پلتفرم</td>
+<td>پلتفرم</td>
+<td>هر مربیِ دارای قابلیت تمرین</td>
+</tr>
+<tr>
+<td>حرکت خصوصی</td>
+<td>یک مربی</td>
+<td>فقط همان مربی</td>
+</tr>
+<tr>
+<td>نسخه و تخصیص برنامه</td>
+<td>رابطه</td>
+<td>دو طرف همان رابطه؛ مربی بعد از پایان فقط خواندن</td>
+</tr>
+<tr>
+<td>جلسه و ست</td>
+<td>ورزشکار، در زمینه رابطه</td>
+<td>ورزشکار همیشه؛ مربی فقط اگر شناسه رابطه برای او باشد</td>
+</tr>
+<tr>
+<td>رکورد</td>
+<td>ورزشکار</td>
+<td>ورزشکار؛ مربی فقط رویدادهای رابطه خودش</td>
+</tr>
+<tr>
+<td>مشاهده خصوصی بدن</td>
+<td>ورزشکار</td>
+<td>فقط ورزشکار</td>
+</tr>
+<tr>
+<td>مشاهده رابطه‌ای بدن</td>
+<td>همان رابطه</td>
+<td>ورزشکار و مربی همان رابطه</td>
+</tr>
+<tr>
+<td>پیام <code>shared</code></td>
+<td>رابطه</td>
+<td>دو طرف</td>
+</tr>
+<tr>
+<td>پیام <code>coach_only</code></td>
+<td>مربی</td>
+<td>فقط مربی</td>
+</tr>
+<tr>
+<td>دانش و گفتگوی AI</td>
+<td>مربی</td>
+<td>عامل مجاز همان محدوده؛ هرگز مربی دیگر</td>
+</tr>
+<tr>
+<td>اعلان</td>
+<td>کاربر گیرنده</td>
+<td>فقط گیرنده</td>
+</tr>
+</tbody></table>
+<p>مدیر پلتفرم با نقش خود از این مرزها عبور نمی‌کند.</p>
+<h2>۱۳. نگهداری و حذف</h2>
+<table><thead><tr>
+<th>داده</th>
+<th>سیاست</th>
+</tr></thead><tbody>
+<tr>
+<td>پرداخت، سفارش پرداخت‌شده، دوره</td>
+<td>بدون حذف و بدون تغییر مبلغ</td>
+</tr>
+<tr>
+<td>نسخه published و revision غذا</td>
+<td>بدون UPDATE</td>
+</tr>
+<tr>
+<td>رویداد رابطه و رویداد رکورد</td>
+<td>append-only</td>
+</tr>
+<tr>
+<td>پیش‌نویس ثبت‌نام و OTP مصرف‌شده</td>
+<td>قابل پاک‌سازی زمان‌بندی‌شده پس از انقضا</td>
+</tr>
+<tr>
+<td>برنامه و غذا و حرکت</td>
+<td><code>archived</code>، نه حذف اگر ارجاع دارند</td>
+</tr>
+<tr>
+<td>رابطه و دعوت</td>
+<td>تغییر وضعیت</td>
+</tr>
+<tr>
+<td>کاربر</td>
+<td>تعلیق</td>
+</tr>
+<tr>
+<td>سند دانش</td>
+<td>مربی می‌تواند سند خودش را از بازیابی خارج کند؛ پیام‌های قبلی متن خودشان را دارند</td>
+</tr>
+<tr>
+<td>جلسه، ست، مشاهده، پیام</td>
+<td>نگهداری؛ صفحه‌بندی و ایندکس زمانی. پارتیشن برای نسخه اولیه نیست</td>
+</tr>
+</tbody></table>
+<h2>۱۴. محل اعمال قاعده</h2>
+<p>در دیتابیس:</p>
+<ul><li>PK و FK.</li><li>UNIQUE شماره، کد ملی، یک پروفایل از هر نوع، یک زوج مربی–ورزشکار، یک پرداخت برای هر سفارش، یک مرجع درگاه، یک سفارش باز برای هر مربی، یک دوره فعال برای هر مربی، یک دعوت باز برای هر مربی و شماره.</li><li>NOT NULL روی مبلغ، وضعیت، زمان خرید و شناسه مالک.</li><li>ایندکس‌های خط زمانی ورزشکار، رابطه، اعلان و مصرف AI.</li></ul>
+<p>در تراکنش برنامه:</p>
+<ul><li>رقم کنترلی کد ملی و نرمال‌سازی شماره.</li><li>ساخت اتمیک کاربر و پروفایل.</li><li>برابری مبلغ تأییدشده با سفارش و فعال‌سازی یک‌باره دوره.</li><li>قفل دوره برای ظرفیت و سهمیه.</li><li>ممنوعیت رابطه شخص با خودش.</li><li>تطبیق ورزشکار تخصیص با رابطه.</li><li>قفل نسخه منتشرشده و revision.</li><li>انتخاب ستون معیار متناسب با <code>tracking_type</code>.</li><li>محاسبه half-up تغذیه و BMI و Epley.</li><li>ننوشتن صفر به‌جای مقدار تهی.</li><li>فیلتر <code>coach_only</code> و فیلتر اجباری <code>coach_profile_id</code> در ابزار AI.</li><li>تبدیل پیشنهاد AI به ردیف‌های رابطه فقط پس از تأیید مربی، طبق پیشنهاد سیاست نسخه اولیه.</li></ul>
+<h2>۱۵. جدول‌هایی که عمداً ساخته نمی‌شوند</h2>
+<p>ثبت مصرف واقعی غذا، عکس بدن، شهریه ورزشکار، تسویه و کمیسیون، workspace، باشگاه و شعبه، گفتگوی بلادرنگ، مدل AI جدا برای هر مربی، جدول جدا برای هر نمودار داشبورد، و ردیف متغیر رکورد جاری.</p></section><section class="appendix"><h1>پیوست ج. سناریوهای داده‌ای</h1><h2>سناریوها و تغییر داده</h2>
+<p>هر سناریو فقط اثر داده‌ای طراحی پیشنهادی را می‌گوید. API دقیق در مرحله مربوط از <span class="ref">06-roadmap.md</span> ساخته می‌شود.</p>
+<h2>۱. ثبت‌نام مربی</h2>
+<ol><li>برای شماره نرمال‌شده یک <code>signup_drafts</code> باز و یک <code>otp_challenges</code> با <code>purpose = signup</code> ساخته می‌شود. کاربر هنوز وجود ندارد.</li><li>تأیید OTP، <code>phone_verified_at</code> پیش‌نویس را پر و چالش را مصرف می‌کند.</li><li>درخواست نهایی، کد ملی، نام نمایشی و پنل <code>coach</code> یا <code>both</code> را روی پیش‌نویس می‌گذارد.</li><li>یک تراکنش این‌ها را با هم انجام می‌دهد: درج <code>users</code>، درج <code>coach_profiles</code>، و اگر پنل <code>both</code> باشد درج <code>athlete_profiles</code>، سپس NULL کردن <code>open_phone</code> و پر کردن <code>consumed_at</code>.</li><li>ورود وب نشست <code>sessions</code> می‌سازد. ورود موبایل یک ردیف <code>personal_access_tokens</code> می‌سازد.</li></ol>
+<p>اگر شماره یا کد ملی وجود داشته باشد تراکنش با UNIQUE شکست می‌خورد و حساب نیمه‌کاره نمی‌ماند. انتخاب پنل <code>athlete</code> حساب می‌سازد ولی دوره، رابطه و خدمات مستقل نمی‌سازد.</p>
+<h2>۲. خرید پلن و فعال شدن دسترسی</h2>
+<ol><li>اگر مربی سفارش <code>pending</code> داشته باشد همان برگردانده می‌شود. وگرنه <code>orders</code> و <code>order_features</code> از روی پلن جاری تصویر می‌شوند و <code>open_checkout_coach_id</code> پر می‌شود.</li><li>هر شروع پرداخت یک <code>payment_attempts</code> جدید با کلید تکرار یکتا می‌سازد.</li><li>callback داخل تراکنش، تلاش را قفل می‌کند. اگر <code>payments</code> برای سفارش وجود داشته باشد هیچ درج جدیدی انجام نمی‌شود.</li><li>مبلغ تأییدشده باید با <code>orders.price_irr</code> برابر باشد. در غیر این صورت تلاش <code>failed</code> می‌شود و دوره ساخته نمی‌شود.</li><li>در موفقیت: یک <code>payments</code>، وضعیت سفارش <code>paid</code>، پاک شدن کلید سفارش باز، و یک <code>access_periods</code>.</li><li>اگر دوره فعال دیگری نباشد دوره جدید <code>active</code> است و <code>active_coach_id</code> پر می‌شود. اگر دوره فعال باشد، دوره جدید <code>scheduled</code> و شروعش برابر پایان دوره فعال است.</li></ol>
+<p>ویرایش بعدی <code>plans</code> ردیف‌های تصویرشده سفارش را عوض نمی‌کند.</p>
+<h2>۳. دعوت ورزشکار بدون حساب</h2>
+<ol><li>مربی با دوره فعال و ظرفیت خالی <code>athlete_invitations</code> با وضعیت <code>pending</code> می‌سازد. <code>users</code> ساخته نمی‌شود و ظرفیت هنوز کم نمی‌شود.</li><li>اگر همان مربی و شماره دعوت باز داشته باشند، UNIQUE کلید دعوت همان ردیف را برمی‌گرداند.</li><li>پذیرش، OTP با <code>purpose = invitation</code> می‌خواهد.</li><li>پس از OTP، کد ملی و نام در همان تراکنش کاربر، <code>athlete_profiles</code>، رابطه <code>active</code>، رویداد <code>started</code> و دعوت <code>accepted</code> را می‌سازند.</li><li>قبل از درج رابطه، ردیف دوره <code>lockForUpdate</code> می‌شود. اگر تعداد رابطه‌های <code>active</code> به ظرفیت رسیده باشد تراکنش برمی‌گردد.</li></ol>
+<p>دو درخواست هم‌زمان برای یک شماره نو: یکی کاربر را می‌سازد و دیگری به UNIQUE شماره می‌خورد و باید همان کاربر ساخته‌شده را به رابطه متصل کند، نه اینکه خطای ناآشنای حساب بدهد.</p>
+<h2>۴. اتصال ورزشکار دارای حساب</h2>
+<ol><li>دعوت با شماره کاربر موجود ساخته می‌شود.</li><li>پذیرش پس از OTP کاربر را پیدا می‌کند. اگر پروفایل ورزشکار نداشته باشد همان را می‌سازد.</li><li>اگر ردیف رابطه برای این زوج وجود داشته و <code>ended</code> باشد، به‌جای INSERT همان ردیف <code>active</code> می‌شود و رویداد <code>reactivated</code> نوشته می‌شود، به شرط ظرفیت.</li><li>اگر رابطه از قبل <code>active</code> باشد پذیرش کار جدیدی نمی‌کند و همان رابطه را برمی‌گرداند.</li><li>اگر دو مربی هم‌زمان همان شخص را دعوت کنند دو رابطه مستقل، در صورت ظرفیت هر کدام، ساخته می‌شود.</li></ol>
+<h2>۵. ایجاد و تخصیص برنامه تمرین</h2>
+<ol><li>مربی دارای قابلیت <code>workout_programs</code> یک <code>workout_programs</code> و نسخه <code>draft</code> با روزها و <code>workout_day_exercises</code> می‌سازد.</li><li>انتشار، نسخه را <code>published</code> می‌کند. از این لحظه آن ردیف‌ها تغییر نمی‌کنند.</li><li>ویرایش بعدی نسخه جدید پیش‌نویس است. <code>current_version_id</code> پس از انتشار نسخه جدید عوض می‌شود.</li><li>تخصیص، <code>workout_assignments</code> را به شناسه نسخه منتشرشده و شناسه رابطه فعال وصل می‌کند و برای ورزشکار اعلان <code>program_assigned</code> می‌سازد.</li><li>تخصیص قدیمی همچنان به نسخه قبلی اشاره می‌کند.</li></ol>
+<p>حرکت خصوصی مربی دیگر در این برنامه قابل انتخاب نیست.</p>
+<h2>۶. ثبت جلسه و رکورد</h2>
+<ol><li>ورزشکار <code>workout_sessions</code> را با تاریخ مدنی و، اگر رابطه فعال است، شناسه همان رابطه می‌سازد.</li><li>هر تلاش واقعی یک <code>workout_session_sets</code> است. تکرارهای ۱۰، ۹ و ۸ سه ردیف‌اند، نه یک کپی از تجویز.</li><li>با تکمیل ست، سرویس بیشینه قبلی <code>personal_record_events</code> را برای همان ورزشکار، حرکت و معیار می‌خواند. فقط اگر مقدار بیشتر باشد رویداد جدید به شناسه همان ست وصل می‌شود.</li><li>برای وزن و تکرار ۱ تا ۱۰، مقدار <code>estimated_1rm_g</code> با <code>epley_v1</code> جداگانه مقایسه می‌شود.</li><li>شکسته‌شدن رکورد اعلان <code>record_achieved</code> برای ورزشکار و مربی همان رابطه می‌سازد.</li></ol>
+<p>تغییر نسخه برنامه بعد از جلسه، <code>workout_day_id</code> و ست‌های ثبت‌شده را بازنویسی نمی‌کند.</p>
+<h2>۷. ایجاد و تخصیص برنامه غذا</h2>
+<ol><li>ماده غذایی اگر تغییر کند <code>food_nutrient_revisions</code> جدید می‌گیرد. revision قبلی UPDATE نمی‌شود.</li><li>نسخه پیش‌نویس غذا، روز و وعده و <code>meal_items</code> را به revision جاریِ لحظه افزودن قلم وصل می‌کند.</li><li>انتشار نسخه را قفل می‌کند. تغییر بعدی غذا فقط قلم‌های نسخه‌های آینده را به revision جدید وصل می‌کند.</li><li><code>meal_assignments</code> مانند تخصیص تمرین به رابطه و نسخه منتشرشده وصل است.</li><li>جمع کالری وعده ستون ذخیره نیست و هنگام خواندن از مقدار قلم و revision محاسبه می‌شود.</li></ol>
+<h2>۸. ثبت آنالیز و گزارش پیشرفت</h2>
+<ol><li>یک <code>body_observations</code> برای زمان اندازه‌گیری ساخته می‌شود.</li><li>فقط معیارهای واقعاً موجود در <code>body_observation_values</code> درج می‌شوند.</li><li>اگر وزن همین مشاهده و یک <code>height_mm</code> در همین مشاهده یا آخرین مشاهده قبلی موجود باشد، ردیف <code>bmi_centi</code> با <code>origin = calculated</code> و <code>formula_code = bmi_v1</code> اضافه می‌شود.</li><li>مشاهده با <code>visibility = relationship</code> شناسه رابطه فعال را دارد و فقط همان مربی همراه ورزشکار آن را می‌بیند.</li><li>گزارش پیشرفت و Before/After دو زمان را از همین ردیف‌ها می‌خوانند. جدول نتیجه ساخته نمی‌شود.</li><li>برای مشاهده اشتراکی، اعلان <code>body_observation_recorded</code> ساخته می‌شود.</li></ol>
+<h2>۹. پیشنهاد AI و انتشار</h2>
+<ol><li>تا وقتی <code>ai_onboarding_completed_at</code> خالی است درخواست تولیدی رد می‌شود.</li><li>ساخت نوبت، دوره فعال را قفل می‌کند، سهمیه را یک واحد زیاد می‌کند و <code>ai_usage_entries</code> می‌نویسد. ابزارها فقط داده همان <code>coach_profile_id</code> و رابطه زمینه را می‌خوانند.</li><li>متن مدل در <code>ai_messages</code> ذخیره می‌شود. اگر خروجی برنامه باشد <code>ai_generations</code> با وضعیت <code>draft</code> و <code>proposal</code> ذخیره می‌شود، بدون تخصیص به ورزشکار.</li><li>تأیید مربی، نسخه معمولی تمرین یا غذا را می‌سازد، تولید را <code>materialized</code> می‌کند و شناسه نسخه را روی آن می‌گذارد.</li><li>تخصیص همان مسیر سناریوی ۵ یا ۷ است. رد کردن، وضعیت را <code>rejected</code> می‌کند و نسخه برنامه نمی‌سازد.</li></ol>
+<p>ورزشکار فقط اگر <code>ai_athlete_access</code> در تصویر دوره باشد می‌تواند گفتگو بسازد. سهمیه همان دوره مربی مصرف می‌شود.</p>
+<h2>۱۰. پایان رابطه</h2>
+<ol><li>رابطه <code>ended</code> می‌شود، <code>ended_at</code> پر می‌شود و رویداد <code>ended</code> درج می‌شود.</li><li>دعوت و تخصیص فعال آن رابطه به <code>ended</code> یا <code>revoked</code> طبق نوع رکورد بسته می‌شوند.</li><li>جلسه، ست، نسخه، مشاهده و پیام حذف نمی‌شوند.</li><li>جلسه جدیدی که بعد از این زمان ثبت شود این <code>coaching_relationship_id</code> را نمی‌گیرد.</li><li>مربی داده‌های دارای همین شناسه رابطه را فقط می‌خواند. مشاهده <code>athlete_private</code> و رابطه مربی دیگر همچنان خارج از دسترس اوست.</li><li>ظرفیت دوره برای دعوت بعدی آزاد می‌شود چون شمارش فقط رابطه‌های <code>active</code> است.</li></ol>
+<h2>۱۱. انقضا یا تغییر پلن</h2>
+<ol><li>job دوره، ردیفی را که <code>ends_at</code> آن گذشته و <code>active</code> است به <code>expired</code> می‌برد و <code>active_coach_id</code> را NULL می‌کند.</li><li>اگر دوره <code>scheduled</code> سررسید داشته باشد در همان فرآیند <code>active</code> می‌شود، به شرط یکتا ماندن کلید فعال.</li><li>پس از انقضا بدون دوره جایگزین، دعوت، تخصیص جدید، تولید AI و نوشتن مربیگری رد می‌شود. خواندن تاریخچه طبق سناریوی ۱۰ باقی است.</li><li>خرید پلن جدید سفارش و تصویر جدید می‌سازد. اگر سیاست پیشنهادیِ شروع بعد از دوره جاری باشد، دوره <code>scheduled</code> ساخته می‌شود.</li><li>اگر ظرفیت دوره جدید از تعداد رابطه‌های فعال کمتر باشد هیچ رابطه‌ای خودکار <code>ended</code> نمی‌شود. دعوت و فعال‌سازی مجدد تا بازگشت به ظرفیت رد می‌شود.</li><li>شکست پرداخت فقط <code>payment_attempts</code> را <code>failed</code> می‌کند. سفارش می‌تواند تا <code>expires_at</code> تلاش تازه بپذیرد. callback ناموفقِ تکراری پرداخت یا دوره نمی‌سازد.</li></ol></section><section class="appendix"><h1>پیوست د. وضعیت مخزن و تصمیم‌های باز</h1><h2>وضعیت مخزن و تصمیم‌های باز</h2>
+<p>بررسی در ۹ اکتبر ۲۰۲۶ روی فایل‌های همین مخزن بک‌اند انجام شده است. دستور <code>mysql</code> در PATH نبود و پوشه <code>vendor</code> نصب نبود، پس محتوای زنده دیتابیس <code>Fito</code> بررسی نشده است. نتیجه زیر فقط وضعیت فایل‌هاست.</p>
+<h2>۱. سه لایه وضعیت</h2>
+<table><thead><tr>
+<th>موضوع</th>
+<th>نیاز محصول</th>
+<th>طراحی یا گزارش قبلی</th>
+<th>آنچه در مخزن است</th>
+</tr></thead><tbody>
+<tr>
+<td>ثبت‌نام OTP، کد ملی، پنل، ساخت اتمیک</td>
+<td>نیاز</td>
+<td>در توضیح کار چنین تصمیمی گزارش شده</td>
+<td>پیاده‌سازی نشده</td>
+</tr>
+<tr>
+<td>رمز نداشتن ثبت‌نام</td>
+<td>نیاز</td>
+<td>همان گزارش</td>
+<td><code>users.password</code> اجباری است</td>
+</tr>
+<tr>
+<td>یکتایی حساب با شماره و کد ملی</td>
+<td>نیاز</td>
+<td>همان گزارش</td>
+<td>یکتایی روی <code>email</code> است</td>
+</tr>
+<tr>
+<td>نشست وب و توکن موبایل</td>
+<td>نیاز</td>
+<td>همان گزارش</td>
+<td>فقط guard نشست <code>web</code> وجود دارد؛ Sanctum و <code>routes/api.php</code> نیستند</td>
+</tr>
+<tr>
+<td>OTP ثابت فقط در توسعه</td>
+<td>نیاز</td>
+<td>همان گزارش</td>
+<td>کدی برای آن نیست</td>
+</tr>
+<tr>
+<td>تمرین، تغذیه، بدن، پلن، AI</td>
+<td>نیاز دامنه محصول</td>
+<td>سند قدیمیِ ممنوع‌کننده در مخزن پیدا نشد</td>
+<td>جدولی برای این دامنه‌ها نیست</td>
+</tr>
+<tr>
+<td>باشگاه، چت بلادرنگ، تسویه ورزشکار</td>
+<td>تأیید نشده یا آینده</td>
+<td>—</td>
+<td>وجود ندارد و اضافه نمی‌شود</td>
+</tr>
+</tbody></table>
+<p>تعارض مهم: گزارش «ثبت‌نام حداقلی پیاده‌سازی شده» با مخزن هم‌خوان نیست. این بک‌اند اسکلت Laravel 12 است. <code>composer.json</code> فقط <code>laravel/framework</code> و <code>laravel/tinker</code> دارد. migrationها همان سه‌گانه پیش‌فرض کاربران، cache و jobs هستند. مدل محصولی فقط <code>App\Models\User</code> با نام، ایمیل و رمز است. مسیرها <code>routes/web.php</code> و <code>routes/console.php</code> هستند و صفحه خوش‌آمد Laravel را برمی‌گردانند. تست ویژگی فقط وضعیت ۲۰۰ صفحه اصلی است. <code>.env.example</code> بررسی محصولی جدا از تنظیم پیش‌فرض Laravel ندارد؛ <code>.env</code> محلی اتصال MySQL به دیتابیس <code>Fito</code> را نام می‌برد.</p>
+<p>سند محصولی قدیمی در این مخزن نیست. README موجود معرفی خود Laravel است، نه تصمیم دامنه فیتو، و بازنویسی نشده است. ممنوعیت قدیمی برای طراحی کل محصول در فایل‌ها دیده نشد؛ این طراحی به همین دلیل به OTP محدود نشده است.</p>
+<h2>۲. چه چیز حفظ، اصلاح یا تازه می‌شود</h2>
+<p>حفظ می‌شود:</p>
+<ul><li>Laravel 12، PHP 8.2، MySQL به‌عنوان موتور هدف، PHPUnit و SQLite حافظه‌ای برای تست.</li><li>جدول‌های <code>sessions</code>، <code>cache</code>، <code>cache_locks</code>، <code>jobs</code>، <code>job_batches</code>، <code>failed_jobs</code>.</li><li>الگوی migration و مدل Eloquent. فایل migration اولیه کاربران، اگر قبلاً اجرا شده باشد، در F01 بازنویسی تاریخچه‌ای نمی‌شود؛ تغییر با migration جدید انجام می‌شود.</li></ul>
+<p>اصلاح می‌شود، فقط وقتی F01 شروع شود:</p>
+<ul><li>معنی <code>users</code> از ایمیل و رمز به شماره و کد ملی.</li><li>حذف وابستگی محصول به <code>password_reset_tokens</code>.</li><li>seeder که اکنون کاربر <code>test@example.com</code> می‌سازد.</li><li>افزودن API نسخهٔ <code>v1</code>، guard توکن و سیاست دسترسی.</li><li>قفل production در برابر OTP ثابت.</li></ul>
+<p>تازه است: همه جدول‌های دامنه در <span class="ref">02-database.md</span>، از پیش‌نویس ثبت‌نام تا دستیار. هیچ‌کدام اکنون migration ندارند.</p>
+<h2>۳. تصمیم‌های باز</h2>
+<p>این‌ها فرض تجاریِ قطعی نیستند. پیشنهاد پیش‌فرض همان چیزی است که مرحله مربوط، اگر قبلش اصلاح نشود، پیاده می‌کند.</p>
+<h3>D-01. محدوده داده</h3>
+<p>پیشنهاد: <code>coach_profiles</code> مرز مالکیت باشد و workspace ساخته نشود.</p>
+<p>دلیل: محصول جداسازی مربی‌ها را خواسته و مدیریت باشگاه یا چند مربی زیر یک اشتراک را نخواسته است.</p>
+<p>اثر: پلن، ورزشکار، برنامه و AI مستقیم به پروفایل مربی وصل می‌شوند.</p>
+<p>اگر رد شود: قبل از F02 باید جدول workspace و اتصال پلن به آن طراحی شود. F01 همچنان فقط هویت است.</p>
+<h3>D-02. ریال یا تومان</h3>
+<p>پیشنهاد: ذخیره و درگاه به ریال صحیح باشد. اگر رابط فروش تومان نشان می‌دهد، تبدیل فقط در همان لبه و با ضریب ۱۰ انجام شود.</p>
+<p>دلیل: مبلغ نباید اعشاری یا دوپهلو باشد و درگاه ایرانی معمولاً ریال می‌گیرد. مثال «پنج میلیون تومان» با «پنج میلیون ریال» ده برابر اختلاف دارد.</p>
+<p>اثر: ستون‌ها <code>*_irr</code> هستند.</p>
+<p>اگر رد شود: نام و واحد ستون‌های پول قبل از F02 عوض می‌شود. منطق سفارش تغییر اساسی نمی‌کند.</p>
+<h3>D-03. دسترسی پس از پایان رابطه</h3>
+<p>پیشنهاد: مربی تاریخچه دارای شناسه همان رابطه را فقط‌خواندنی ببیند و داده خصوصی ورزشکار یا رابطه مربی دیگر را نبیند.</p>
+<p>دلیل: حذف تاریخچه، سابقه مربیگری را از بین می‌برد؛ ادامه دسترسی کامل هم داده شخصی را باز می‌گذارد.</p>
+<p>اثر: جلسه و مشاهده جدید پس از پایان، آن شناسه رابطه را نمی‌گیرند. سیاست حذف ندارد.</p>
+<p>اگر رد شود: F03 و سیاست خواندن F05 تا F09 باید محدودتر یا بازتر شوند. جدول‌ها لزوماً عوض نمی‌شوند.</p>
+<h3>D-04. انقضا و ظرفیت مازاد</h3>
+<p>پیشنهاد: با انقضا نوشتن جدید بسته شود. با کاهش ظرفیت، رابطه فعال خودکار قطع نشود و فقط دعوت و فعال‌سازی مجدد تا رسیدن به ظرفیت رد شود. تقسیط مابه‌التفاوت و تمدید خودکار بانکی انجام نشود.</p>
+<p>دلیل: قطع خودکار ورزشکار تصمیم تجاری سنگین است و در تعریف محصول نیامده است.</p>
+<p>اثر: وضعیت جدید <code>paused</code> به رابطه اضافه نمی‌شود.</p>
+<p>اگر رد شود: قبل از F03 باید وضعیت و ترتیب انتخاب ورزشکار مازاد مشخص شود.</p>
+<h3>D-05. دیده شدن آنالیز برای چند مربی</h3>
+<p>پیشنهاد: مشاهده یا خصوصی ورزشکار است یا به یک رابطه مشخص وصل است. مربی دوم آن را خودکار نمی‌بیند.</p>
+<p>دلیل: محصول تفکیک داده شخصی از داده رابطه را خواسته و چند مربی را ممکن دانسته است.</p>
+<p>اثر: ستون <code>visibility</code> روی <code>body_observations</code>.</p>
+<p>اگر رد شود: قبل از F08 قاعده مشاهده باید ساده شود. ممکن است ستون دیده‌شدن حذف شود.</p>
+<h3>D-06. تأیید برنامه تولیدشده توسط AI</h3>
+<p>پیشنهاد: خروجی AI تا تأیید مربی تخصیص داده نمی‌شود. دسترسی خود ورزشکار به دستیار پیش‌فرض خاموش و وابسته به قابلیت پلن است. سهمیه آن هم از دوره مربی کم می‌شود.</p>
+<p>دلیل: تعریف محصول این موارد را تصمیم باز گذاشته و نسخه اولیه باید محافظه‌کار و قابل اجرا باشد.</p>
+<p>اثر: وضعیت‌های <code>ai_generations</code> و کلید <code>ai_athlete_access</code>.</p>
+<p>اگر رد شود: F10 مسیر انتشار یا مخاطب گفتگو را عوض می‌کند. بهتر است قبل از همان مرحله گفته شود.</p>
+<h3>D-07. کاتالوگ حرکت و غذا</h3>
+<p>پیشنهاد: ردیف با مربی تهی مال پلتفرم است و ردیف دارای مربی خصوصی همان مربی است. این نیاز تأییدشده محصول نیست.</p>
+<p>دلیل: بدون این تمایز، یا همه مربی‌ها یک کاتالوگ تغییرپذیر مشترک دارند یا هر مربی از صفر همه حرکت‌ها را می‌سازد.</p>
+<p>اثر: <code>exercises.coach_profile_id</code> و <code>foods.coach_profile_id</code> تهی‌پذیرند.</p>
+<p>اگر رد شود: قبل از F04 و F07 خصوصی‌سازی حذف می‌شود و کاتالوگ فقط پلتفرمی می‌ماند.</p>
+<h3>D-08. درگاه واقعی</h3>
+<p>پیشنهاد فنیِ بازدارنده نیست: مدل پرداخت به نام درگاه وابسته نباشد. تا وقتی درگاه و مرچنت انتخاب نشده، F02 مسیر دامنه، تکرار callback و درگاه آزمایشی را می‌سازد. اتصال واقعی همان مرحله نیست.</p>
+<p>اثر: نبود نام درگاه، طراحی جدول را متوقف نمی‌کند.</p>
+<h2>۴. انتخاب‌های فنی که کار را متوقف نمی‌کنند</h2>
+<p>این‌ها تصمیم تجاری نیستند و در اجرا قابل برگشت‌اند:</p>
+<ul><li>Laravel Sanctum برای توکن موبایل و نشست کوکی وب.</li><li>پیشوند <code>/api/v1</code>.</li><li>نگهداری کلید یکتای مشروط با ستون تهی، به‌خاطر SQLite تست.</li><li>بازیابی متنی دانش مربی در نسخه اولیه، بدون پایگاه برداری.</li><li>واحد فروش AI به‌صورت تعداد درخواست، با ثبت توکن فقط برای هزینه.</li><li>منطقه مدنی <code>Asia/Tehran</code> و ذخیره لحظه‌ها به UTC.</li><li>اعتبار OTP ۱۲۰ ثانیه، پنج تلاش، و اعتبار دعوت ۷ روز.</li><li>فرمول‌های نسخه‌دار <code>bmi_v1</code> و <code>epley_v1</code>.</li></ul>
+<h2>۵. خارج از نقشه، بدون شناسه</h2>
+<p>ثبت مصرف واقعی غذا، عکس بدن، ورود خدماتیِ مستقل ورزشکار، انتخاب مربی از فهرست عمومی، برنامه AI بدون مربی، پرداخت ورزشکار به مربی، تسویه، مارکت‌پلیس، چت بلادرنگ، و مدیریت باشگاه. تا وقتی تعریف محصول این‌ها را به نیاز تبدیل نکند مرحله نمی‌گیرند.</p></section><section class="appendix"><h1>پیوست هـ. نقشه اجرای تفصیلی</h1><h2>نقشه اجرا</h2>
+<p>شناسه‌ها ثابت‌اند. هر مرحله یک نتیجه قابل‌آزمایش دارد و دامنه مرحله بعد را پیش‌خور نمی‌کند. پیشنهادهای D-01 تا D-08 در <span class="ref">05-current-state-and-decisions.md</span> پیش‌فرض همان مرحله‌اند، مگر قبل از شروعش اصلاح شوند.</p>
+<p>هیچ مرحله‌ای در زمان نوشتن این سند شروع نشده است.</p>
+<div class="diagram"><pre class="mermaid">
+flowchart LR
+    F01[&quot;F01 هویت&quot;] --&gt; F02[&quot;F02 پلن و پرداخت&quot;]
+    F02 --&gt; F03[&quot;F03 رابطه&quot;]
+    F01 --&gt; F04[&quot;F04 کاتالوگ حرکت&quot;]
+    F03 --&gt; F05[&quot;F05 برنامه تمرین&quot;]
+    F04 --&gt; F05
+    F05 --&gt; F06[&quot;F06 جلسه و رکورد&quot;]
+    F03 --&gt; F07[&quot;F07 تغذیه&quot;]
+    F03 --&gt; F08[&quot;F08 بدن&quot;]
+    F06 --&gt; F09[&quot;F09 بازخورد و اعلان&quot;]
+    F08 --&gt; F09
+    F02 --&gt; F10[&quot;F10 دستیار&quot;]
+    F06 --&gt; F10
+    F07 --&gt; F10
+    F08 --&gt; F10
+    F09 --&gt; F11[&quot;F11 پذیرش انتهابهانتها&quot;]
+    F10 --&gt; F11
+</pre></div>
+<h2>F01. هویت، پروفایل و ورود</h2>
+<p>هدف: شخص بتواند با OTP ثبت‌نام یا وارد شود و حساب و پروفایل در پایان موفق، یکجا ساخته شوند.</p>
+<p>پیش‌نیاز: مخزن فعلی Laravel. بررسی شود migration کاربران روی دیتابیس محلی اجرا شده یا نه؛ تغییر روی جدول موجود با migration جدید باشد.</p>
+<p>محدوده: <code>users</code>، <code>signup_drafts</code>، <code>otp_challenges</code>، <code>platform_roles</code>، <code>coach_profiles</code>، <code>athlete_profiles</code>، Sanctum، مسیر <code>/api/v1/auth</code> و <code>/api/v1/me</code>، دستور اعطای نقش مدیر.</p>
+<p>منطق و API: درخواست و تأیید OTP؛ تکمیل ثبت‌نام؛ ورود کاربر موجود؛ افزودن پروفایل غایب؛ خروج. وب با نشست، موبایل با توکن. رقم کنترلی کد ملی و نرمال‌سازی شماره. کاربر تعلیق‌شده وارد نشود.</p>
+<p>دسترسی: مسیر تکمیل ثبت‌نام فقط پیش‌نویس تأییدشده را می‌پذیرد. <code>/me</code> فقط صاحب نشست یا توکن.</p>
+<p>پذیرش: ثبت‌نام هم‌زمان تکراری یک کاربر می‌سازد؛ OTP ثابت در محیط production سرویس را رد می‌کند؛ رمز و ایمیل برای ورود لازم نیست.</p>
+<p>تست: رقم کنترلی، شماره تکراری، کد ملی تکراری، انقضای OTP، ساخت اتمیک پروفایل، تفاوت نشست و توکن.</p>
+<p>خارج: پلن، دعوت، تمرین، غذا، بدن، AI.</p>
+<h2>F02. پلن، سفارش، پرداخت و دوره</h2>
+<p>هدف: مدیر پلن بسازد و مربی با پرداخت موفق دقیقاً یک دوره دسترسی بگیرد.</p>
+<p>پیش‌نیاز: F01 و وجود حداقل یک <code>platform_admin</code>.</p>
+<p>محدوده: <code>plans</code>، <code>plan_features</code>، <code>orders</code>، <code>order_features</code>، <code>payment_attempts</code>، <code>payments</code>، <code>access_periods</code>. درگاه واقعی تجاری خارج است؛ درگاه آزمایشی و ثبت دستیِ ممیزی‌شده مدیر داخل است.</p>
+<p>منطق و API: CRUD پلن برای مدیر؛ شروع سفارش؛ شروع تلاش؛ callback تکرارپذیر؛ خواندن دوره فعال مربی. تصویر قیمت و قابلیت در سفارش. یک سفارش باز برای هر مربی. اختلاف مبلغ دوره نمی‌سازد.</p>
+<p>دسترسی: مدیر برای تعریف پلن و مشاهده پرداخت. مربی فقط سفارش و دوره خودش. ورزشکار این مسیر را ندارد.</p>
+<p>پذیرش: دو callback هم‌زمان یک payment و یک دوره می‌سازند. تغییر پلن پس از پرداخت، سفارش قبلی را عوض نمی‌کند. دوره ماهانه با تقویم تهران حساب می‌شود.</p>
+<p>تست: تکرار callback، اختلاف مبلغ، دو سفارش باز، انقضای سفارش، فعال شدن دوره scheduled پس از پایان دوره فعال.</p>
+<p>خارج: ظرفیت هنگام دعوت، سهمیه مصرفی AI، درگاه تولیدی.</p>
+<h2>F03. دعوت و رابطه</h2>
+<p>هدف: مربی ورزشکار نو یا موجود را بدون حساب تکراری و بدون عبور از ظرفیت اضافه کند و رابطه را پایان دهد.</p>
+<p>پیش‌نیاز: F01 و F02. دوره فعال باید وجود داشته باشد.</p>
+<p>محدوده: <code>athlete_invitations</code>، <code>coaching_relationships</code>، <code>coaching_relationship_events</code>.</p>
+<p>منطق و API: ایجاد و لغو دعوت، پذیرش با OTP، پایان، فعال‌سازی مجدد. قفل ردیف دوره هنگام پذیرش. رابطه شخص با خودش ممنوع.</p>
+<p>دسترسی: دعوت را مربی صاحب دوره می‌سازد. پذیرش را مالک شماره انجام می‌دهد. دو طرف رابطه فعال، هویت طرف مقابل را در حد نام نمایشی و وضعیت رابطه می‌بینند.</p>
+<p>پذیرش: دعوت حساب نمی‌سازد. ظرفیت آخر در دو پذیرش هم‌زمان فقط یک رابطه می‌سازد. پایان رابطه داده تاریخی را حذف نمی‌کند و ظرفیت را آزاد می‌کند.</p>
+<p>تست: ورزشکار بدون حساب، با حساب، شماره تکراری، ظرفیت پر، رابطه دوباره، دو مربی برای یک ورزشکار.</p>
+<p>خارج: برنامه، غذا، بدن و محتوای مربیگری.</p>
+<h2>F04. کاتالوگ حرکت</h2>
+<p>هدف: حرکت پلتفرم و حرکت خصوصی مربی، با عضله و رسانه، برای استفاده بعدی آماده باشد.</p>
+<p>پیش‌نیاز: F01. دوره و رابطه لازم نیست، ولی دیدن کاتالوگ در API مربی بعداً به قابلیت پلن مقید می‌شود. در این مرحله نوشتن کاتالوگ پلتفرم فقط برای مدیر است.</p>
+<p>محدوده: <code>muscles</code>، <code>body_model_areas</code>، <code>muscle_body_area</code>، <code>exercises</code>، <code>exercise_media</code>، <code>exercise_muscles</code>. کد ناحیه مدل بدن داده اولیه قابل اصلاح است.</p>
+<p>منطق و API: مدیر حرکت پلتفرم را می‌سازد. مربی فقط حرکت خودش را می‌سازد و حرکت پلتفرم را می‌خواند. آرشیو به‌جای حذف اگر بعداً ارجاع وجود داشته باشد؛ در این مرحله چون برنامه هنوز نیست حذف حرکت بدون ارجاع مجاز است.</p>
+<p>دسترسی: حرکت خصوصی در فهرست مربی دیگر نیست.</p>
+<p>پذیرش: عضله هدف از ناحیه مدل بدن و از معیار اندازه‌گیری مستقل است. نوع اجرا یکی از چهار مقدار بسته است.</p>
+<p>تست: جداسازی مربی‌ها، یکتایی عضله هر حرکت، ممنوعیت ویرایش حرکت پلتفرم توسط مربی.</p>
+<p>خارج: برنامه، جلسه و قانون «عضله ضعیف».</p>
+<h2>F05. برنامه تمرین و تخصیص</h2>
+<p>هدف: مربی برنامه نسخه‌دار بسازد و همان نسخه را به رابطه فعال تخصیص دهد.</p>
+<p>پیش‌نیاز: F03 و F04. قابلیت <code>workout_programs</code> روی دوره فعال.</p>
+<p>محدوده: <code>workout_programs</code>، <code>workout_program_versions</code>، <code>workout_days</code>، <code>workout_day_exercises</code>، <code>workout_assignments</code>.</p>
+<p>منطق و API: پیش‌نویس، انتشار، نسخه بعدی، تخصیص و پایان تخصیص. ستون معیار باید با نوع اجرا بخواند.</p>
+<p>دسترسی: فقط مربی همان رابطه و فقط روی رابطه <code>active</code> می‌نویسد. ورزشکار همان رابطه نسخه تخصیص‌یافته را می‌خواند.</p>
+<p>پذیرش: ویرایش بعد از انتشار، ردیف نسخه قبلی و تخصیص قبلی را تغییر نمی‌دهد. حرکت مربی دیگر انتخاب نمی‌شود.</p>
+<p>تست: قفل نسخه، تخصیص به رابطه پایان‌یافته، نبود قابلیت پلن، ترتیب حرکت‌ها.</p>
+<p>خارج: ثبت اجرای واقعی و رکورد.</p>
+<h2>F06. جلسه تمرین و رکورد</h2>
+<p>هدف: اجرای واقعی جدا از تجویز ثبت شود و رکورد به ست سازنده‌اش برسد.</p>
+<p>پیش‌نیاز: F05.</p>
+<p>محدوده: <code>workout_sessions</code>، <code>workout_session_sets</code>، <code>personal_record_events</code>.</p>
+<p>منطق و API: شروع و تکمیل جلسه، ثبت ست، خواندن رکورد جاری از آخرین رویداد. محاسبه <code>epley_v1</code> فقط در محدوده مجاز.</p>
+<p>دسترسی: ورزشکار جلسه خودش را می‌نویسد. مربی جلسه‌های دارای رابطه خودش را می‌خواند. پس از پایان رابطه نوشتن با آن شناسه ممنوع و خواندن تاریخچه مجاز است.</p>
+<p>پذیرش: ست‌های واقعی جایگزین متن تجویز نمی‌شوند. رکورد ضعیف‌تر رویداد جدید نمی‌سازد. تغییر برنامه، ست قدیمی را عوض نمی‌کند.</p>
+<p>تست: تکرارهای متفاوت یک حرکت، تساوی رکورد، جلسه بعد از پایان رابطه، ردیابی FK تا ست.</p>
+<p>خارج: اعلان، که در F09 به همین رویداد وصل می‌شود. در F06 ثبت رکورد حتی بدون اعلان کامل است.</p>
+<h2>F07. تغذیه</h2>
+<p>هدف: برنامه غذا با مبنای صریح و تاریخچه تغذیه‌ای پایدار به ورزشکار تخصیص داده شود.</p>
+<p>پیش‌نیاز: F03 برای تخصیص، و F01 برای مالک غذا. قابلیت <code>nutrition_programs</code>. کاتالوگ غذا از نظر مالکیت مانند F04 است و در همین مرحله ساخته می‌شود چون دامنه کوچک‌تری از حرکت است.</p>
+<p>محدوده: <code>foods</code>، <code>food_nutrient_revisions</code>، <code>meal_plans</code>، <code>meal_plan_versions</code>، <code>meal_days</code>، <code>meals</code>، <code>meal_items</code>، <code>meal_assignments</code>.</p>
+<p>منطق و API: ساخت غذا و revision، پیش‌نویس و انتشار برنامه، خواندن جمع وعده، تخصیص.</p>
+<p>دسترسی: همان الگوی برنامه تمرین.</p>
+<p>پذیرش: تغییر غذا پس از انتشار، جمع برنامه قبلی را عوض نمی‌کند. دقیقاً یکی از مقدار گرمی یا مقدار واحدی پر است. گرد کردن half-up قابل بازتولید است.</p>
+<p>تست: <code>per_100g</code>، <code>per_unit</code>، revision جدید، قفل نسخه، مرز مربی.</p>
+<p>خارج: ثبت آنچه ورزشکار واقعاً خورده است.</p>
+<h2>F08. آنالیز بدن و پیشرفت</h2>
+<p>هدف: اندازه‌گیری ناقص در طول زمان بماند و مقایسه دو تاریخ بدون صفر کردن مقدار خالی ممکن باشد.</p>
+<p>پیش‌نیاز: F01 برای ثبت خصوصی ورزشکار، F03 برای مشاهده اشتراکی. قابلیت <code>body_analysis</code> برای نوشتن مربی.</p>
+<p>محدوده: <code>body_metric_definitions</code>، <code>body_observations</code>، <code>body_observation_values</code>. API مقایسه دو مشاهده.</p>
+<p>منطق و API: ثبت مشاهده، محاسبه <code>bmi_v1</code> وقتی ورودی کامل است، سری زمانی یک معیار، مقایسه Before/After.</p>
+<p>دسترسی: خصوصی فقط ورزشکار. رابطه‌ای فقط همان مربی و ورزشکار. مدیر پلتفرم این داده را نمی‌خواند.</p>
+<p>پذیرش: معیار غایب ردیف ندارد. BMI بدون قد ساخته نمی‌شود. ناحیه مدل بدن از F04 با این مقادیر یکی گرفته نمی‌شود.</p>
+<p>تست: ثبت ناقص، قد قبلی، BMI دستگاه در کنار BMI محاسبه‌شده، جداسازی دو مربی.</p>
+<p>خارج: عکس بدن و برچسب ضعف عضله.</p>
+<h2>F09. بازخورد و اعلان</h2>
+<p>هدف: بازخورد قابل‌انتساب و یادداشت داخلی از هم جدا باشند و رویدادهای اصلی اعلان ذخیره کنند.</p>
+<p>پیش‌نیاز: F03، و برای موضوع‌های تمرینی و بدنی F06 و F08. اگر آن مرحله‌ها موجود باشند اعلان به همان‌ها وصل می‌شود؛ اعلان عمومی رابطه با خود F03 هم قابل تست است.</p>
+<p>محدوده: <code>feedback_threads</code>، <code>feedback_messages</code>، <code>notifications</code>. اتصال اعلان به تخصیص برنامه، رکورد، مشاهده بدن و پاسخ مربی.</p>
+<p>منطق و API: گشایش موضوع، پاسخ، حل موضوع، فهرست اعلان، علامت خوانده‌شد.</p>
+<p>دسترسی: ورزشکار پیام <code>coach_only</code> را نه می‌نویسد و نه می‌خواند. اعلان فقط برای <code>user_id</code> گیرنده است. موضوع باید به همان رابطه تعلق داشته باشد.</p>
+<p>پذیرش: پاسخ مربی اعلان می‌سازد. این API سوکت یا رشته گفتگوی آزاد ندارد.</p>
+<p>تست: فیلتر یادداشت داخلی، موضوع نامربوط به رابطه، خواندن اعلان شخص دیگر.</p>
+<p>خارج: پوش نوتیفیکیشن سیستم‌عامل و پیام‌رسان بلادرنگ.</p>
+<h2>F10. دستیار مربی</h2>
+<p>هدف: مربی روش کارش را ثبت کند و پیشنهاد محدود به داده همان رابطه بگیرد، بدون انتشار خودکار برنامه.</p>
+<p>پیش‌نیاز: F02 برای سهمیه، F03 برای رابطه، F05 و F07 برای تبدیل پیشنهاد به نسخه، F06 و F08 برای ابزارهای عددی، F09 برای بازخورد. F04 برای شناخت حرکت.</p>
+<p>محدوده: ستون‌های AI روی <code>coach_profiles</code>، <code>coach_ai_setting_versions</code>، <code>coach_knowledge_documents</code>، <code>coach_knowledge_chunks</code>، <code>ai_conversations</code>، <code>ai_messages</code>، <code>ai_generations</code>، <code>ai_usage_entries</code>. درگاه مدل پشت یک رابط قابل‌جایگزینی در تست.</p>
+<p>منطق و API: ثبت نسخه روش مربی، بارگذاری دانش، گفتگوی مربی، ابزارهای مجاز، تولید پیش‌نویس، تأیید یا رد، تبدیل به نسخه برنامه. مسیر ورزشکار فقط با قابلیت <code>ai_athlete_access</code>.</p>
+<p>دسترسی: هر ابزار با شناسه مربیِ سرور فیلتر می‌شود. متن کاربر ابزار جدید یا مربی دیگر انتخاب نمی‌کند. بدون onboarding تولید بسته است. سهمیه تمام‌شده تراکنش را برمی‌گرداند.</p>
+<p>پذیرش: دو درخواست آخرِ سهمیه فقط یکی را مصرف می‌کنند. پیشنهاد تأییدنشده تخصیص نمی‌سازد. قطعه دانش مربی دیگر در نتیجه ابزار نیست. عدد رکورد و BMI از ابزار دیتابیس می‌آید.</p>
+<p>تست: قفل سهمیه، جداسازی دانش، رد ورزشکار وقتی قابلیت خاموش است، materialize و یکتا بودن نسخه ساخته‌شده.</p>
+<p>خارج: مدل اختصاصی هر مربی، جست‌وجوی وب، پایگاه برداری، توصیه درمانی به‌عنوان تجویز پزشک.</p>
+<h2>F11. پذیرش انتهابه‌انتها</h2>
+<p>هدف: سناریوهای <span class="ref">04-scenarios.md</span> روی مسیر واقعی API، از ثبت‌نام تا انقضای پلن، یکجا آزمایش شوند.</p>
+<p>پیش‌نیاز: F01 تا F10.</p>
+<p>محدوده: تست ویژگی بین‌دامنه‌ای و رفع نقص همان رفتارها. قابلیت جدید محصول در این مرحله ساخته نمی‌شود. اگر نقص فقط با تغییر طراحی حل شود، قبل از تغییر کد در سند ثبت می‌شود.</p>
+<p>منطق و API: مسیر تازه‌ای به‌جز رفع نقص اضافه نمی‌شود.</p>
+<p>دسترسی: هر سناریو حداقل یک تلاش دسترسی غیرمجاز دارد: مربی دیگر، ورزشکار دیگر، کاربر بدون دوره، و callback تکراری.</p>
+<p>پذیرش: هر یازده سناریوی سند سناریوها یک تست ویژگی سبز دارند. تستی که اجرا نشده در گزارش پاس نمی‌شود.</p>
+<p>تست: همان سناریوها، به‌علاوه تعلیق کاربر در میانه رابطه.</p>
+<p>خارج: درگاه تولیدی، پوش، غذای مصرف‌شده، عکس بدن و قابلیت‌های آینده.</p>
+<h2>ترتیب پیشنهادی اجرا</h2>
+<p>مسیر بحرانی این است: F01، F02، F03، F04، F05، F06، سپس F07 و F08 به ترتیب یا پس از F06، بعد F09، F10 و F11. F07 می‌تواند بعد از F03 و به‌موازات F04 شروع شود، ولی در اجرا بهتر است هم‌زمان با کار ناتمام مرحله قبلی باز نشود.</p></section>
+<script src="mermaid.min.js"></script>
+<script>
+mermaid.initialize({
+  startOnLoad: false,
+  theme: "base",
+  securityLevel: "loose",
+  fontFamily: "Vazirmatn, Tahoma, sans-serif",
+  themeVariables: {
+    fontFamily: "Vazirmatn, Tahoma, sans-serif",
+    primaryColor: "#e7f2f2",
+    primaryTextColor: "#1c1917",
+    primaryBorderColor: "#0f3d3e",
+    lineColor: "#44403c",
+    fontSize: "15px"
+  }
+});
+var nodes = document.querySelectorAll("pre.mermaid");
+var chain = Promise.resolve();
+nodes.forEach(function (node) {
+  chain = chain.then(function () {
+    return mermaid.run({ nodes: [node] }).catch(function (error) {
+      node.insertAdjacentHTML("afterend", "<p class=warn>نمودار این بخش در خروجی رسم نشد.</p>");
+      console.error(error);
+    });
+  });
+});
+chain.then(function () {
+  document.querySelectorAll(".diagram svg").forEach(function (svg) {
+    try {
+      const box = svg.getBBox();
+      if (box && box.width > 0 && box.height > 0) {
+        const pad = 12;
+        svg.setAttribute("viewBox", (box.x - pad) + " " + (box.y - pad) + " " + (box.width + pad * 2) + " " + (box.height + pad * 2));
+        svg.setAttribute("width", String(box.width + pad * 2));
+        svg.setAttribute("height", String(box.height + pad * 2));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
+  document.documentElement.setAttribute("data-rendered", "yes");
+});
+</script>
+</body>
+</html>
