@@ -1,0 +1,9 @@
+# کتابخانه‌ها و فایل‌های ابزاری نمایش داکیومنت
+docs/product/review/
+*.min.js
+*.min.css
+
+# فایل‌های فریمورک و کش
+vendor/
+node_modules/
+storage/

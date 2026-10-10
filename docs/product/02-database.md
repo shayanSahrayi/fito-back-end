@@ -9,9 +9,12 @@
 | شناسه | `BIGINT UNSIGNED` خودکار |
 | زمان لحظه‌ای | `DATETIME` به UTC |
 | تاریخ مدنی | `DATE` به تقویم `Asia/Tehran` |
-| پول | `BIGINT UNSIGNED` ریال، بدون اعشار |
-| وزن | گرم، صحیح |
-| طول | میلی‌متر، صحیح |
+| پول | `BIGINT UNSIGNED` ریال، بدون اعشار. پرداخت این نسخه فقط خدمات پلتفرم به مربی است |
+| وزن بدن در ذخیره | گرم، صحیح |
+| قد و دورها در ذخیره | میلی‌متر، صحیح |
+| وزن بدن در API | کیلوگرم؛ تبدیل `کیلوگرم × ۱۰۰۰ = گرم` فقط در لبه |
+| قد و دورها در API | سانتی‌متر؛ تبدیل `سانتی‌متر × ۱۰ = میلی‌متر` فقط در لبه |
+| مقدار غذا در API و ذخیره قلم | گرم، چون کاربر همان را وارد می‌کند |
 | انرژی | کیلوکالری صحیح |
 | درشت‌مغذی | میلی‌گرم صحیح |
 | درصد | basis point؛ ۱۸٫۲۵٪ برابر ۱۸۲۵ |
@@ -54,6 +57,7 @@ JSON فقط در دو جا استفاده می‌شود: `ai_generations.proposa
 | حرکت | `exercises` | حرکت پلتفرم یا خصوصی مربی |
 | حرکت | `exercise_media` | رسانه حرکت |
 | حرکت | `exercise_muscles` | عضله‌های درگیر |
+| حرکت | `exercise_requests` | درخواست مربی برای ورود حرکت به بانک، پس از تأیید مدیر |
 | تمرین | `workout_programs` | هویت پایدار برنامه |
 | تمرین | `workout_program_versions` | نسخه تغییرناپذیر پس از انتشار |
 | تمرین | `workout_days` | روز یا بخش نسخه |
@@ -73,9 +77,11 @@ JSON فقط در دو جا استفاده می‌شود: `ai_generations.proposa
 | بدن | `body_metric_definitions` | واژگان معیار و واحد |
 | بدن | `body_observations` | یک نوبت ثبت آنالیز |
 | بدن | `body_observation_values` | معیارهایی که واقعاً مقدار دارند |
+| بدن | `body_photos` | عکس بدن؛ دسترسی مربی فقط در قرارداد فعال |
 | بازخورد | `feedback_threads` | موضوع بازخورد داخل رابطه |
 | بازخورد | `feedback_messages` | پیام مشترک یا یادداشت داخلی |
 | اعلان | `notifications` | اعلان درون‌برنامه‌ای |
+| AI | `coach_ai_workspaces` | حافظه شخصی همان مربی روی مدل مشترک |
 | AI | `coach_ai_setting_versions` | روش و قواعد نسخه‌دار مربی |
 | AI | `coach_knowledge_documents` | سند دانش مربی |
 | AI | `coach_knowledge_chunks` | قطعه قابل بازیابی همان مربی |
@@ -89,13 +95,15 @@ JSON فقط در دو جا استفاده می‌شود: `ai_generations.proposa
 
 ### `users`
 
-حساب شخص. ایمیل و رمز محصول نیستند.
+حساب شخص. ایمیل محصول نیست. ثبت‌نام خودِ کاربر با OTP رمز اجباری ندارد. اگر مربی ورزشکار جدیدی بسازد، `password` هش کد ملی است و `password_is_initial` برابر true می‌شود. عوض کردن رمز، `national_code` را تغییر نمی‌دهد.
 
 | ستون | نوع | تهی | پیش‌فرض | قید |
 | --- | --- | --- | --- | --- |
 | `id` | BIGINT UNSIGNED | نه | خودکار | PK |
 | `phone` | CHAR(11) | نه | | UNIQUE |
 | `national_code` | CHAR(10) | نه | | UNIQUE |
+| `password` | VARCHAR(255) | بله | | فقط هش؛ برای حساب ساخته‌شده توسط مربی |
+| `password_is_initial` | BOOLEAN | نه | false | true تا وقتی رمز اولیه عوض نشده |
 | `status` | VARCHAR(32) | نه | `active` | `active` یا `suspended` |
 | `suspended_at` | DATETIME | بله | | |
 | `last_login_at` | DATETIME | بله | | |
@@ -112,7 +120,7 @@ JSON فقط در دو جا استفاده می‌شود: `ai_generations.proposa
 | `phone_verified_at` | DATETIME | بله | | |
 | `national_code` | CHAR(10) | بله | | |
 | `display_name` | VARCHAR(120) | بله | | |
-| `panel` | VARCHAR(32) | بله | | `coach`، `athlete`، `both` |
+| `panel` | VARCHAR(32) | بله | | فقط `coach` یا `athlete` |
 | `open_phone` | CHAR(11) | بله | | UNIQUE؛ تا قبل از مصرف برابر `phone` |
 | `expires_at` | DATETIME | نه | | |
 | `consumed_at` | DATETIME | بله | | |
@@ -393,7 +401,8 @@ PK مرکب `(muscle_id, body_model_area_id)`، هر دو FK و RESTRICT. این
 | `id` | BIGINT UNSIGNED | نه | خودکار | PK |
 | `coach_profile_id` | BIGINT UNSIGNED | بله | | NULL یعنی کاتالوگ پلتفرم؛ FK، RESTRICT |
 | `name` | VARCHAR(160) | نه | | |
-| `instructions` | TEXT | بله | | |
+| `instructions` | TEXT | بله | | آموزش حرکت |
+| `goal` | TEXT | بله | | هدف تمرین | |
 | `tracking_type` | VARCHAR(32) | نه | | `weight_reps`، `reps`، `duration`، `distance` |
 | `status` | VARCHAR(32) | نه | `active` | `active` یا `archived` |
 | `created_by_user_id` | BIGINT UNSIGNED | بله | | FK، RESTRICT |
@@ -422,6 +431,24 @@ PK مرکب `(muscle_id, body_model_area_id)`، هر دو FK و RESTRICT. این
 | `involvement` | VARCHAR(16) | نه | `primary` یا `secondary` |
 
 UNIQUE `(exercise_id, muscle_id)`.
+
+### `exercise_requests`
+
+درخواست، پیشنهاد یا بازخورد مربی برای بانک پلتفرم. تا تأیید مدیر، حرکت بانک ساخته نمی‌شود.
+
+| ستون | نوع | تهی | قید |
+| --- | --- | --- | --- |
+| `id` | BIGINT UNSIGNED | نه | PK |
+| `coach_profile_id` | BIGINT UNSIGNED | نه | FK، RESTRICT |
+| `proposed_name` | VARCHAR(160) | نه | |
+| `instructions` | TEXT | بله | |
+| `goal` | TEXT | بله | |
+| `tracking_type` | VARCHAR(32) | نه | همان چهار نوع حرکت |
+| `status` | VARCHAR(32) | نه | `pending`، `approved`، `rejected` |
+| `review_note` | VARCHAR(500) | بله | |
+| `reviewed_by_user_id` | BIGINT UNSIGNED | بله | FK، RESTRICT |
+| `exercise_id` | BIGINT UNSIGNED | بله | FK حرکت بانک، فقط پس از تأیید |
+| `created_at` / `updated_at` | DATETIME | نه | |
 
 ### `workout_programs`
 
@@ -456,7 +483,8 @@ UNIQUE `(exercise_id, muscle_id)`.
 | `id` | BIGINT UNSIGNED | نه | PK |
 | `workout_program_version_id` | BIGINT UNSIGNED | نه | FK، RESTRICT |
 | `position` | SMALLINT UNSIGNED | نه | UNIQUE همراه نسخه |
-| `title` | VARCHAR(120) | نه | |
+| `title` | VARCHAR(120) | نه | | مثلاً شنبه پا، یا فول‌بادی |
+| `weekday` | TINYINT UNSIGNED | بله | | تهی اگر برنامه به روز هفته وصل نیست |
 
 ### `workout_day_exercises`
 
@@ -509,6 +537,7 @@ UNIQUE `(exercise_id, muscle_id)`.
 | `performed_on` | DATE | نه | |
 | `started_at` / `completed_at` | DATETIME | بله | |
 | `status` | VARCHAR(32) | نه | `in_progress` یا `completed` |
+| `source` | VARCHAR(32) | نه | `prescribed` یا `athlete_free` |
 | `perceived_effort` | TINYINT UNSIGNED | بله | ۱ تا ۱۰، اگر ورزشکار بدهد |
 | `athlete_note` | VARCHAR(500) | بله | |
 | `created_at` / `updated_at` | DATETIME | نه | |
@@ -542,7 +571,7 @@ UNIQUE `(exercise_id, muscle_id)`.
 | `athlete_profile_id` | BIGINT UNSIGNED | نه | FK، RESTRICT |
 | `exercise_id` | BIGINT UNSIGNED | نه | FK، RESTRICT |
 | `coaching_relationship_id` | BIGINT UNSIGNED | بله | FK، RESTRICT |
-| `metric` | VARCHAR(32) | نه | `max_weight_g`، `max_duration_s`، `max_distance_m`، `estimated_1rm_g` |
+| `metric` | VARCHAR(32) | نه | `max_weight_g`، `max_reps`، `max_duration_s`، `max_distance_m`، `estimated_1rm_g` |
 | `value_int` | INT UNSIGNED | نه | |
 | `workout_session_set_id` | BIGINT UNSIGNED | نه | FK، RESTRICT |
 | `formula_code` | VARCHAR(32) | بله | برای یک‌تکرار بیشینه: `epley_v1` |
@@ -550,7 +579,7 @@ UNIQUE `(exercise_id, muscle_id)`.
 
 ایندکس `(athlete_profile_id, exercise_id, metric, recorded_at)`. درج فقط وقتی مقدار از بیشینه قبلی همان ورزشکار و حرکت و معیار بیشتر باشد. رویدادها UPDATE نمی‌شوند.
 
-`epley_v1`: گرم ضربدر `(۱ + تکرار / ۳۰)` با گرد کردن half-up، فقط برای تکرار ۱ تا ۱۰.
+معیار رکورد از `tracking_type` حرکت می‌آید و همیشه وزن نیست. `epley_v1` فقط وقتی وزن و تکرار ۱ تا ۱۰ هر دو موجود باشند رویداد اضافه است: گرم ضربدر `(۱ + تکرار / ۳۰)` با گرد کردن half-up.
 
 ## ۸. تغذیه
 
@@ -675,7 +704,24 @@ UNIQUE `(exercise_id, muscle_id)`.
 
 UNIQUE `(body_observation_id, metric_code, origin)` تا BMI دستگاه و BMI محاسبه‌شده هم‌زمان بمانند. معیاری که اندازه گرفته نشده ردیف ندارد.
 
-Before/After دو مشاهده را مقایسه می‌کند و جدول عکس یا نتیجه مقایسه‌ای ندارد.
+Before/After دو مشاهده را مقایسه می‌کند و جدول نتیجه مقایسه‌ای ندارد.
+
+### `body_photos`
+
+عکس بدن در همین نسخه ذخیره می‌شود. فایل در دیسک است و این جدول فقط فراداده است.
+
+| ستون | نوع | تهی | قید |
+| --- | --- | --- | --- |
+| `id` | BIGINT UNSIGNED | نه | PK |
+| `athlete_profile_id` | BIGINT UNSIGNED | نه | FK، RESTRICT |
+| `coaching_relationship_id` | BIGINT UNSIGNED | بله | FK، RESTRICT؛ وقتی برای مربی فرستاده یا توسط او ثبت شده |
+| `uploaded_by_user_id` | BIGINT UNSIGNED | نه | FK، RESTRICT |
+| `storage_path` | VARCHAR(255) | نه | |
+| `taken_at` | DATETIME | نه | |
+| `sent_to_coach_at` | DATETIME | بله | |
+| `created_at` | DATETIME | نه | |
+
+ورزشکار عکس خودش را همیشه می‌بیند. مربی و ابزار AI او فقط وقتی رابطه `active` است و شناسه همان رابطه روی عکس است می‌بینند. با `ended` شدن رابطه این خواندن قطع می‌شود، حتی برای عکس‌های دوره قرارداد. عکس حذف نمی‌شود.
 
 ## ۱۰. بازخورد و اعلان
 
@@ -725,6 +771,18 @@ Before/After دو مشاهده را مقایسه می‌کند و جدول عک�
 ایندکس `(user_id, read_at, id)`. اعلان push و وب‌سوکت جدول دیگری نمی‌خواهد.
 
 ## ۱۱. هوش مصنوعی
+
+مدل بین مربی‌ها مشترک است. `coach_ai_workspaces` حافظه جداگانه هر مربی است: روش، علاقه، دانش و گفتگوهای او. این workspace مرز داده کل محصول نیست؛ مرز داده همچنان `coach_profiles` است.
+
+### `coach_ai_workspaces`
+
+| ستون | نوع | تهی | قید |
+| --- | --- | --- | --- |
+| `id` | BIGINT UNSIGNED | نه | PK |
+| `coach_profile_id` | BIGINT UNSIGNED | نه | UNIQUE، FK، RESTRICT |
+| `created_at` | DATETIME | نه | |
+
+نسخه‌های تنظیمات، سندها و گفتگوها با همین `coach_profile_id` به این حافظه تعلق دارند و وارد پاسخ مربی دیگر نمی‌شوند.
 
 ### `coach_ai_setting_versions`
 
@@ -833,7 +891,8 @@ UNIQUE `(coach_profile_id, sha256)`.
 | جلسه و ست | ورزشکار، در زمینه رابطه | ورزشکار همیشه؛ مربی فقط اگر شناسه رابطه برای او باشد |
 | رکورد | ورزشکار | ورزشکار؛ مربی فقط رویدادهای رابطه خودش |
 | مشاهده خصوصی بدن | ورزشکار | فقط ورزشکار |
-| مشاهده رابطه‌ای بدن | همان رابطه | ورزشکار و مربی همان رابطه |
+| مشاهده رابطه‌ای بدن در دوره قرارداد | همان رابطه | ورزشکار همیشه؛ مربی فقط برای دوره قرارداد خودش، حتی بعد از پایان به‌صورت فقط‌خواندنی |
+| عکس بدن | ورزشکار | مربی و AI او فقط تا وقتی رابطه فعال است |
 | پیام `shared` | رابطه | دو طرف |
 | پیام `coach_only` | مربی | فقط مربی |
 | دانش و گفتگوی AI | مربی | عامل مجاز همان محدوده؛ هرگز مربی دیگر |
@@ -881,4 +940,4 @@ UNIQUE `(coach_profile_id, sha256)`.
 
 ## ۱۵. جدول‌هایی که عمداً ساخته نمی‌شوند
 
-ثبت مصرف واقعی غذا، عکس بدن، شهریه ورزشکار، تسویه و کمیسیون، workspace، باشگاه و شعبه، گفتگوی بلادرنگ، مدل AI جدا برای هر مربی، جدول جدا برای هر نمودار داشبورد، و ردیف متغیر رکورد جاری.
+ثبت مصرف واقعی غذا، پرداخت شاگرد به پلتفرم، شهریه و قرارداد خصوصی مربی با ورزشکار، تسویه، باشگاه و شعبه، چت بلادرنگ، مدل AI جدا برای هر مربی، و جدول جدا برای هر نمودار داشبورد. عکس بدن و حافظه AI هر مربی در محدوده هستند. workspace سازمانی ساخته نمی‌شود.

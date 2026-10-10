@@ -52,6 +52,8 @@ erDiagram
     muscles ||--o{ exercise_muscles : targets
     exercises ||--o{ exercise_muscles : muscles
     exercises ||--o{ exercise_media : media
+    coach_profiles ||--o{ exercise_requests : requests
+    exercise_requests |o--o| exercises : approved
     muscles }o--o{ body_model_areas : display
     coach_profiles ||--o{ exercises : private
     coach_profiles ||--o{ workout_programs : owns
@@ -90,11 +92,14 @@ erDiagram
 ```mermaid
 erDiagram
     athlete_profiles ||--o{ body_observations : sessions
+    athlete_profiles ||--o{ body_photos : photos
+    coaching_relationships ||--o{ body_photos : while_active
     coaching_relationships ||--o{ body_observations : shared
     body_observations ||--o{ body_observation_values : values
     body_metric_definitions ||--o{ body_observation_values : unit
     coaching_relationships ||--o{ feedback_threads : subject
     feedback_threads ||--o{ feedback_messages : messages
+    coach_profiles ||--o| coach_ai_workspaces : memory
     coach_profiles ||--o{ coach_knowledge_documents : knowledge
     coach_knowledge_documents ||--o{ coach_knowledge_chunks : chunks
     coach_profiles ||--o{ ai_conversations : scope
