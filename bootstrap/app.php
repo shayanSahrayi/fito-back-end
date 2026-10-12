@@ -1,7 +1,13 @@
 <?php
 
+use App\Domain\Catalog\CatalogException;
 use App\Domain\Commerce\CommerceException;
+use App\Domain\Ai\AiException;
+use App\Domain\Body\BodyException;
+use App\Domain\Feedback\FeedbackException;
 use App\Domain\Identity\IdentityException;
+use App\Domain\Nutrition\NutritionException;
+use App\Domain\Workout\WorkoutException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -22,7 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $render = function (IdentityException|CommerceException $exception, Request $request) {
+        $render = function (IdentityException|CommerceException|CatalogException|WorkoutException|NutritionException|FeedbackException|BodyException|AiException $exception, Request $request) {
             if ($request->is('api/*') || $request->expectsJson()) {
                 return response()->json([
                     'message' => $exception->getMessage(),
@@ -35,6 +41,24 @@ return Application::configure(basePath: dirname(__DIR__))
             return $render($exception, $request);
         });
         $exceptions->render(function (CommerceException $exception, Request $request) use ($render) {
+            return $render($exception, $request);
+        });
+        $exceptions->render(function (CatalogException $exception, Request $request) use ($render) {
+            return $render($exception, $request);
+        });
+        $exceptions->render(function (WorkoutException $exception, Request $request) use ($render) {
+            return $render($exception, $request);
+        });
+        $exceptions->render(function (NutritionException $exception, Request $request) use ($render) {
+            return $render($exception, $request);
+        });
+        $exceptions->render(function (FeedbackException $exception, Request $request) use ($render) {
+            return $render($exception, $request);
+        });
+        $exceptions->render(function (BodyException $exception, Request $request) use ($render) {
+            return $render($exception, $request);
+        });
+        $exceptions->render(function (AiException $exception, Request $request) use ($render) {
             return $render($exception, $request);
         });
     })->create();

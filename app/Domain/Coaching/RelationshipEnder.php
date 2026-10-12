@@ -6,7 +6,10 @@ use App\Domain\Commerce\CommerceException;
 use App\Models\CoachProfile;
 use App\Models\CoachingRelationship;
 use App\Models\CoachingRelationshipEvent;
+use App\Models\MealAssignment;
 use App\Models\User;
+use App\Models\WorkoutAssignment;
+use Illuminate\Support\Facades\DB;
 
 final class RelationshipEnder
 {
@@ -33,23 +36,41 @@ final class RelationshipEnder
             throw new CommerceException('invalid_end_reason', 'دلیل پایان رابطه معتبر نیست.');
         }
 
-        $relationship->forceFill([
-            'status' => 'ended',
-            'ended_at' => now(),
-            'ended_by_user_id' => $coachUser->id,
-            'end_reason' => $reason,
-        ])->save();
+        return DB::transaction(function () use ($coachUser, $relationship, $reason): array {
+            $relationship->forceFill([
+                'status' => 'ended',
+                'ended_at' => now(),
+                'ended_by_user_id' => $coachUser->id,
+                'end_reason' => $reason,
+            ])->save();
 
-        CoachingRelationshipEvent::query()->create([
-            'coaching_relationship_id' => $relationship->id,
-            'event_type' => 'ended',
-            'actor_user_id' => $coachUser->id,
-            'happened_at' => now(),
-        ]);
+            CoachingRelationshipEvent::query()->create([
+                'coaching_relationship_id' => $relationship->id,
+                'event_type' => 'ended',
+                'actor_user_id' => $coachUser->id,
+                'happened_at' => now(),
+            ]);
 
-        return [
-            'id' => $relationship->id,
-            'status' => $relationship->status,
-        ];
+            WorkoutAssignment::query()
+                ->where('coaching_relationship_id', $relationship->id)
+                ->where('status', 'active')
+                ->update([
+                    'status' => 'ended',
+                    'updated_at' => now(),
+                ]);
+
+            MealAssignment::query()
+                ->where('coaching_relationship_id', $relationship->id)
+                ->where('status', 'active')
+                ->update([
+                    'status' => 'ended',
+                    'updated_at' => now(),
+                ]);
+
+            return [
+                'id' => $relationship->id,
+                'status' => $relationship->status,
+            ];
+        });
     }
 }

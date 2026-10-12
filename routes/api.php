@@ -1,17 +1,41 @@
 <?php
 
 use App\Domain\Commerce\TestGateway;
+use App\Http\Controllers\Api\V1\Admin\AiProviderController;
 use App\Http\Controllers\Api\V1\Admin\AdminOrderController;
+use App\Http\Controllers\Api\V1\Admin\BodyAreaController;
+use App\Http\Controllers\Api\V1\Admin\ExerciseController as AdminExerciseController;
+use App\Http\Controllers\Api\V1\Admin\ExerciseRequestController as AdminExerciseRequestController;
+use App\Http\Controllers\Api\V1\Admin\FoodController as AdminFoodController;
+use App\Http\Controllers\Api\V1\Admin\MuscleController;
 use App\Http\Controllers\Api\V1\Admin\PlanController;
+use App\Http\Controllers\Api\V1\Athlete\AssistantController as AthleteAssistantController;
+use App\Http\Controllers\Api\V1\Athlete\BodyController as AthleteBodyController;
+use App\Http\Controllers\Api\V1\Athlete\FeedbackThreadController as AthleteFeedbackThreadController;
 use App\Http\Controllers\Api\V1\Athlete\InvitationController;
+use App\Http\Controllers\Api\V1\Athlete\MealAssignmentController as AthleteMealAssignmentController;
+use App\Http\Controllers\Api\V1\Athlete\WorkoutAssignmentController as AthleteWorkoutAssignmentController;
+use App\Http\Controllers\Api\V1\Athlete\WorkoutSessionController as AthleteWorkoutSessionController;
 use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\OtpController;
 use App\Http\Controllers\Api\V1\Auth\PasswordController;
 use App\Http\Controllers\Api\V1\Auth\SignupController;
 use App\Http\Controllers\Api\V1\Coach\AccessController;
+use App\Http\Controllers\Api\V1\Coach\AssistantController;
 use App\Http\Controllers\Api\V1\Coach\AthleteController;
+use App\Http\Controllers\Api\V1\Coach\BodyController as CoachBodyController;
+use App\Http\Controllers\Api\V1\Coach\ExerciseController as CoachExerciseController;
+use App\Http\Controllers\Api\V1\Coach\ExerciseRequestController as CoachExerciseRequestController;
+use App\Http\Controllers\Api\V1\Coach\FeedbackThreadController;
+use App\Http\Controllers\Api\V1\Coach\FoodController as CoachFoodController;
+use App\Http\Controllers\Api\V1\Coach\MealAssignmentController;
+use App\Http\Controllers\Api\V1\Coach\MealPlanController;
 use App\Http\Controllers\Api\V1\Coach\OrderController;
+use App\Http\Controllers\Api\V1\Coach\WorkoutAssignmentController;
+use App\Http\Controllers\Api\V1\Coach\WorkoutProgramController;
+use App\Http\Controllers\Api\V1\Coach\WorkoutSessionController;
 use App\Http\Controllers\Api\V1\MeController;
+use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\Payments\TestCallbackController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +53,11 @@ Route::prefix('v1/me')->middleware(['auth-session', 'auth:sanctum'])->group(func
     Route::post('password', [PasswordController::class, 'update']);
 });
 
+Route::prefix('v1')->middleware(['auth-session', 'auth:sanctum'])->group(function () {
+    Route::get('notifications', [NotificationController::class, 'index']);
+    Route::post('notifications/{notification}/read', [NotificationController::class, 'read']);
+});
+
 Route::prefix('v1/admin')->middleware(['auth-session', 'auth:sanctum'])->group(function () {
     Route::get('plans', [PlanController::class, 'index']);
     Route::post('plans', [PlanController::class, 'store']);
@@ -37,6 +66,30 @@ Route::prefix('v1/admin')->middleware(['auth-session', 'auth:sanctum'])->group(f
     Route::delete('plans/{plan}', [PlanController::class, 'destroy']);
     Route::get('orders', [AdminOrderController::class, 'index']);
     Route::post('orders/{order}/manual-payments', [AdminOrderController::class, 'storePayment']);
+    Route::get('muscles', [MuscleController::class, 'index']);
+    Route::post('muscles', [MuscleController::class, 'store']);
+    Route::get('muscles/{muscle}', [MuscleController::class, 'show']);
+    Route::patch('muscles/{muscle}', [MuscleController::class, 'update']);
+    Route::put('muscles/{muscle}/areas', [MuscleController::class, 'syncAreas']);
+    Route::get('body-areas', [BodyAreaController::class, 'index']);
+    Route::post('body-areas', [BodyAreaController::class, 'store']);
+    Route::patch('body-areas/{bodyArea}', [BodyAreaController::class, 'update']);
+    Route::get('exercises', [AdminExerciseController::class, 'index']);
+    Route::post('exercises', [AdminExerciseController::class, 'store']);
+    Route::get('exercises/{exercise}', [AdminExerciseController::class, 'show']);
+    Route::patch('exercises/{exercise}', [AdminExerciseController::class, 'update']);
+    Route::post('exercises/{exercise}/archive', [AdminExerciseController::class, 'archive']);
+    Route::get('exercise-requests', [AdminExerciseRequestController::class, 'index']);
+    Route::post('exercise-requests/{exerciseRequest}/approve', [AdminExerciseRequestController::class, 'approve']);
+    Route::post('exercise-requests/{exerciseRequest}/reject', [AdminExerciseRequestController::class, 'reject']);
+    Route::get('foods', [AdminFoodController::class, 'index']);
+    Route::post('foods', [AdminFoodController::class, 'store']);
+    Route::get('foods/{food}', [AdminFoodController::class, 'show']);
+    Route::patch('foods/{food}', [AdminFoodController::class, 'update']);
+    Route::post('foods/{food}/revisions', [AdminFoodController::class, 'revise']);
+    Route::post('foods/{food}/archive', [AdminFoodController::class, 'archive']);
+    Route::get('ai-provider', [AiProviderController::class, 'show']);
+    Route::put('ai-provider', [AiProviderController::class, 'update']);
 });
 
 Route::prefix('v1/coach')->middleware(['auth-session', 'auth:sanctum'])->group(function () {
@@ -47,12 +100,90 @@ Route::prefix('v1/coach')->middleware(['auth-session', 'auth:sanctum'])->group(f
     Route::get('relationships', [AthleteController::class, 'index']);
     Route::post('invitations/{invitation}/revoke', [AthleteController::class, 'revoke']);
     Route::post('relationships/{relationship}/end', [AthleteController::class, 'end']);
+    Route::get('relationships/{relationship}/workout-sessions', [WorkoutSessionController::class, 'index']);
+    Route::get('exercises', [CoachExerciseController::class, 'index']);
+    Route::post('exercises', [CoachExerciseController::class, 'store']);
+    Route::get('exercises/{exercise}', [CoachExerciseController::class, 'show']);
+    Route::patch('exercises/{exercise}', [CoachExerciseController::class, 'update']);
+    Route::post('exercises/{exercise}/archive', [CoachExerciseController::class, 'archive']);
+    Route::post('exercise-requests', [CoachExerciseRequestController::class, 'store']);
+    Route::get('workout-programs', [WorkoutProgramController::class, 'index']);
+    Route::post('workout-programs', [WorkoutProgramController::class, 'store']);
+    Route::get('workout-programs/{workoutProgram}', [WorkoutProgramController::class, 'show']);
+    Route::patch('workout-programs/{workoutProgram}', [WorkoutProgramController::class, 'update']);
+    Route::post('workout-programs/{workoutProgram}/publish', [WorkoutProgramController::class, 'publish']);
+    Route::post('workout-programs/{workoutProgram}/draft', [WorkoutProgramController::class, 'draft']);
+    Route::post('workout-programs/{workoutProgram}/archive', [WorkoutProgramController::class, 'archive']);
+    Route::get('workout-assignments', [WorkoutAssignmentController::class, 'index']);
+    Route::post('workout-assignments', [WorkoutAssignmentController::class, 'store']);
+    Route::post('workout-assignments/{workoutAssignment}/end', [WorkoutAssignmentController::class, 'end']);
+    Route::get('foods', [CoachFoodController::class, 'index']);
+    Route::post('foods', [CoachFoodController::class, 'store']);
+    Route::get('foods/{food}', [CoachFoodController::class, 'show']);
+    Route::patch('foods/{food}', [CoachFoodController::class, 'update']);
+    Route::post('foods/{food}/revisions', [CoachFoodController::class, 'revise']);
+    Route::post('foods/{food}/archive', [CoachFoodController::class, 'archive']);
+    Route::get('meal-plans', [MealPlanController::class, 'index']);
+    Route::post('meal-plans', [MealPlanController::class, 'store']);
+    Route::get('meal-plans/{mealPlan}', [MealPlanController::class, 'show']);
+    Route::patch('meal-plans/{mealPlan}', [MealPlanController::class, 'update']);
+    Route::post('meal-plans/{mealPlan}/publish', [MealPlanController::class, 'publish']);
+    Route::post('meal-plans/{mealPlan}/draft', [MealPlanController::class, 'draft']);
+    Route::post('meal-plans/{mealPlan}/archive', [MealPlanController::class, 'archive']);
+    Route::get('meal-assignments', [MealAssignmentController::class, 'index']);
+    Route::post('meal-assignments', [MealAssignmentController::class, 'store']);
+    Route::post('meal-assignments/{mealAssignment}/end', [MealAssignmentController::class, 'end']);
+    Route::get('feedback-threads', [FeedbackThreadController::class, 'index']);
+    Route::post('feedback-threads', [FeedbackThreadController::class, 'store']);
+    Route::get('feedback-threads/{feedbackThread}', [FeedbackThreadController::class, 'show']);
+    Route::post('feedback-threads/{feedbackThread}/messages', [FeedbackThreadController::class, 'reply']);
+    Route::post('feedback-threads/{feedbackThread}/resolve', [FeedbackThreadController::class, 'resolve']);
+    Route::get('relationships/{relationship}/body-observations', [CoachBodyController::class, 'index']);
+    Route::post('relationships/{relationship}/body-observations', [CoachBodyController::class, 'store']);
+    Route::get('relationships/{relationship}/body-series', [CoachBodyController::class, 'series']);
+    Route::get('body-observations/compare', [CoachBodyController::class, 'compare']);
+    Route::get('body-observations/{bodyObservation}', [CoachBodyController::class, 'show']);
+    Route::get('relationships/{relationship}/body-photos', [CoachBodyController::class, 'photos']);
+    Route::post('relationships/{relationship}/body-photos', [CoachBodyController::class, 'storePhoto']);
+    Route::get('body-photos/{bodyPhoto}', [CoachBodyController::class, 'showPhoto']);
+    Route::get('body-photos/{bodyPhoto}/file', [CoachBodyController::class, 'file']);
+    Route::post('ai/settings', [AssistantController::class, 'saveSettings']);
+    Route::post('ai/knowledge', [AssistantController::class, 'storeKnowledge']);
+    Route::post('ai/conversations', [AssistantController::class, 'storeConversation']);
+    Route::get('ai/conversations/{aiConversation}', [AssistantController::class, 'showConversation']);
+    Route::post('ai/generations', [AssistantController::class, 'storeGeneration']);
+    Route::post('ai/generations/{aiGeneration}/approve', [AssistantController::class, 'approve']);
+    Route::post('ai/generations/{aiGeneration}/reject', [AssistantController::class, 'reject']);
 });
 
 Route::prefix('v1/athlete')->middleware(['auth-session', 'auth:sanctum'])->group(function () {
     Route::get('relationships', [InvitationController::class, 'relationships']);
     Route::get('invitations', [InvitationController::class, 'index']);
     Route::post('invitations/{invitation}/decline', [InvitationController::class, 'decline']);
+    Route::get('workout-assignments', [AthleteWorkoutAssignmentController::class, 'index']);
+    Route::get('workout-assignments/{workoutAssignment}', [AthleteWorkoutAssignmentController::class, 'show']);
+    Route::get('workout-sessions', [AthleteWorkoutSessionController::class, 'index']);
+    Route::post('workout-sessions', [AthleteWorkoutSessionController::class, 'store']);
+    Route::get('workout-sessions/{workoutSession}', [AthleteWorkoutSessionController::class, 'show']);
+    Route::post('workout-sessions/{workoutSession}/sets', [AthleteWorkoutSessionController::class, 'storeSet']);
+    Route::post('workout-sessions/{workoutSession}/complete', [AthleteWorkoutSessionController::class, 'complete']);
+    Route::get('meal-assignments', [AthleteMealAssignmentController::class, 'index']);
+    Route::get('meal-assignments/{mealAssignment}', [AthleteMealAssignmentController::class, 'show']);
+    Route::get('feedback-threads', [AthleteFeedbackThreadController::class, 'index']);
+    Route::post('feedback-threads', [AthleteFeedbackThreadController::class, 'store']);
+    Route::get('feedback-threads/{feedbackThread}', [AthleteFeedbackThreadController::class, 'show']);
+    Route::post('feedback-threads/{feedbackThread}/messages', [AthleteFeedbackThreadController::class, 'reply']);
+    Route::post('feedback-threads/{feedbackThread}/resolve', [AthleteFeedbackThreadController::class, 'resolve']);
+    Route::get('body-observations', [AthleteBodyController::class, 'index']);
+    Route::post('body-observations', [AthleteBodyController::class, 'store']);
+    Route::get('body-observations/compare', [AthleteBodyController::class, 'compare']);
+    Route::get('body-series', [AthleteBodyController::class, 'series']);
+    Route::get('body-observations/{bodyObservation}', [AthleteBodyController::class, 'show']);
+    Route::get('body-photos', [AthleteBodyController::class, 'photos']);
+    Route::post('body-photos', [AthleteBodyController::class, 'storePhoto']);
+    Route::get('body-photos/{bodyPhoto}', [AthleteBodyController::class, 'showPhoto']);
+    Route::get('body-photos/{bodyPhoto}/file', [AthleteBodyController::class, 'file']);
+    Route::post('ai/conversations', [AthleteAssistantController::class, 'storeConversation']);
 });
 
 if (TestGateway::enabled((string) app()->environment())) {

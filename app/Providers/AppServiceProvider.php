@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Domain\Ai\FakeLanguageModel;
+use App\Domain\Ai\HttpLanguageModel;
+use App\Domain\Ai\LanguageModel;
 use App\Domain\Coaching\AthleteWelcomeNotice;
 use App\Domain\Coaching\LogAthleteWelcomeNotice;
 use App\Domain\Identity\FixedOtpPolicy;
@@ -18,6 +21,13 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(OtpCodeGenerator::class, RandomOtpCodeGenerator::class);
         $this->app->bind(AthleteWelcomeNotice::class, LogAthleteWelcomeNotice::class);
+        $this->app->bind(LanguageModel::class, function ($app) {
+            if ($app->environment('testing')) {
+                return new FakeLanguageModel();
+            }
+
+            return $app->make(HttpLanguageModel::class);
+        });
         $this->app->singleton(FixedOtpPolicy::class, fn () => FixedOtpPolicy::fromConfig());
     }
 
